@@ -1,0 +1,1 @@
+#define DOL_MAIN_IOS 249
