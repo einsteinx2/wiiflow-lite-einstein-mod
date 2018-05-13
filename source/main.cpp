@@ -31,7 +31,7 @@ int main(int argc, char **argv)
 	mainIOS = DOL_MAIN_IOS;// 249
     m_vid.init(); // Init video
     /* Show first frame of the loading animation by setting a long wait time. 
-       If we animate right away, it'll stall for a second while loading the IOS */
+       If we animate right away, it'll stall for a second while we init ISFS */
     m_vid.animateWaitMessages(false); 
     m_vid.waitMessage(0.15f);
 	__exception_setreload(10);

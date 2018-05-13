@@ -80,7 +80,9 @@ void Nand::Init()
 bool Nand::LoadDefaultIOS(void)
 {
 	Patch_AHB();
-	s32 ret = IOS_ReloadIOS(IOS_GetPreferredVersion());
+	s32 ret = 0;
+	if(IOS_GetVersion() != IOS_GetPreferredVersion())
+		ret = IOS_ReloadIOS(IOS_GetPreferredVersion());
 	loadIOS(IOS_GetVersion(), false);
 	Init_ISFS();
 	return (ret == 0);
@@ -1126,7 +1128,6 @@ void Nand::Init_ISFS()
 	if(isfs_inited)
 		return;
 	PatchIOS(IOS_GetVersion() < 222);
-	usleep(1000);
 	gprintf("Init ISFS\n");
 	ISFS_Initialize();
 	isfs_inited = true;
@@ -1137,7 +1138,6 @@ void Nand::DeInit_ISFS()
 	gprintf("Deinit ISFS\n");
 	ISFS_Deinitialize();
 	isfs_inited = false;
-	usleep(1000);
 }
 
 /* Thanks to postloader for that patch */
