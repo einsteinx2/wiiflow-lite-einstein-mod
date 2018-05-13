@@ -167,6 +167,8 @@ void CVideo::setAA(u8 aa, bool alpha, int width, int height)
 
 void CVideo::init(void)
 {
+	m_animateWaitMessages = true;
+	
 	/* General Video Init */
 	VIDEO_Init();
 	m_wide = CONF_GetAspectRatio() == CONF_ASPECT_16_9;
@@ -557,7 +559,7 @@ void CVideo::_showWaitMessages(CVideo *m)
 {
 	m->m_showingWaitMessages = true;
 	u32 frames = m->m_waitMessageDelay * 50;
-	u32 waitFrames = frames;
+	u32 waitFrames = 0;
 
 	s8 fadeDirection = 1;
 	s8 PNGfadeDirection = 1;
@@ -596,7 +598,13 @@ void CVideo::_showWaitMessages(CVideo *m)
 		}
 		else
 			VIDEO_WaitVSync();
-		waitFrames--;
+            
+		/* If m_animateWaitMessages is false, we never decrement the wait frames, 
+		   so we wait forever until it's true before displaying the next frame.
+		   We need this so that on boot we can show the first frame immediately, 
+		   and then start animating after loading the IOS to prevent a stutter. */
+        if(m->m_animateWaitMessages)
+			waitFrames--;
 	}
 	//gprintf("Wait Message Thread: End\n");
 	m->m_showingWaitMessages = false;
@@ -620,6 +628,10 @@ void CVideo::hideWaitMessage()
 	waitThread = LWP_THREAD_NULL;
 }
 
+void CVideo::animateWaitMessages(bool animate) {
+	m_animateWaitMessages = animate;
+}
+
 void CVideo::waitMessage(float delay)
 {
 	if(m_defaultWaitMessages.size() == 0)
@@ -636,7 +648,7 @@ void CVideo::waitMessage(float delay)
 		for(int i = 0; i < 8; i++)
 			m_defaultWaitMessages.push_back(m_wTextures[i]);
 	}
-	waitMessage(vector<TexData>(), delay);
+	waitMessage(m_defaultWaitMessages, delay);
 }
 
 void CVideo::waitMessage(const vector<TexData> &tex, float delay)

@@ -72,6 +72,7 @@ public:
 	void waitMessage(float delay);
 	void waitMessage(const vector<TexData> &tex, float delay);
 	void waitMessage(const TexData &tex);
+	void animateWaitMessages(bool animate);
 	s32 TakeScreenshot(const char *);
 	void shiftViewPort(float x, float y);
 private:
@@ -104,6 +105,7 @@ private:
 	volatile bool m_WaitThreadRunning;
 	volatile bool m_showingWaitMessages;
 	vector<TexData> m_waitMessages;
+	bool m_animateWaitMessages;
 	// 
 	static const int _stencilWidth;
 	static const int _stencilHeight;

@@ -29,11 +29,15 @@ int main(int argc, char **argv)
 {
 	MEM_init(); //Inits both mem1lo and mem2
 	mainIOS = DOL_MAIN_IOS;// 249
+    m_vid.init(); // Init video
+    /* Show first frame of the loading animation by setting a long wait time. 
+       If we animate right away, it'll stall for a second while loading the IOS */
+    m_vid.animateWaitMessages(false); 
+    m_vid.waitMessage(0.15f);
 	__exception_setreload(10);
 	Gecko_Init(); //USB Gecko and SD/WiFi buffer
 	gprintf(" \nWelcome to %s!\nThis is the debug output.\n", VERSION_STRING.c_str());
 
-	m_vid.init(); // Init video
 	DeviceHandle.Init();
 	NandHandle.Init();
 
@@ -60,11 +64,13 @@ int main(int argc, char **argv)
 		}
 	}
 	check_neek2o();
+    gprintf("Current IOS version: %d\n", IOS_GetVersion());
 	/* Init ISFS */
 	if(neek2o() || Sys_DolphinMode())
 		NandHandle.Init_ISFS();
 	else
 		NandHandle.LoadDefaultIOS(); /* safe reload to preferred IOS */
+    m_vid.animateWaitMessages(true); // Start animating the loading screen
 	/* Maybe new IOS and Port settings */
 	if(InternalSave.CheckSave())
 		InternalSave.LoadSettings();
@@ -78,7 +84,6 @@ int main(int argc, char **argv)
 	Sys_ExitTo(EXIT_TO_HBC);
 
 	DeviceHandle.MountAll();
-	m_vid.waitMessage(0.15f);
 
 	Open_Inputs();
 	if(mainMenu.init())
