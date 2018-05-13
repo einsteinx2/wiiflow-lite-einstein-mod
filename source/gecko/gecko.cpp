@@ -5,6 +5,7 @@
 #include <string.h>
 #include <sys/iosupport.h>
 #include <stdarg.h>
+#include <sys/time.h>
 
 #include "gecko.hpp"
 #include "memory/mem2.hpp"
@@ -95,6 +96,30 @@ static void WriteToFile(const char* tmp, size_t len)
 		memset(sdwritebuffer, 0, SDWRITE_SIZE);
 		fclose(outfile);
 	}
+}
+
+long long gtimestamp_millis() 
+{
+    struct timeval te; 
+    gettimeofday(&te, NULL); // get current time
+    //gprintf("te.tv_sec: %lld  te.tv_usec: %lld\n", te.tv_sec, te.tv_usec);
+    long long milliseconds = te.tv_sec*1000LL + te.tv_usec/1000; // calculate milliseconds
+    return milliseconds;
+}
+
+static long long lastTimestamp = gtimestamp_millis();
+static unsigned long long timeDiffCounter = 0;
+static long long timeDiff() {
+    long long timestamp = gtimestamp_millis();
+    long long diff = timestamp - lastTimestamp;
+    lastTimestamp = timestamp;
+    return diff;
+}
+
+/* Prints the difference between now and the last timestamp, not thread safe */
+void gprintDiff() 
+{
+	gprintf("timeDiff %llu: %lld\n", timeDiffCounter++, timeDiff());
 }
 
 void Gecko_Init(void)

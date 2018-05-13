@@ -11,6 +11,8 @@ void LogToSD_SetBuffer(bool buf);
 extern "C" {
 #endif
 
+long long gtimestamp_millis(); 
+void gprintDiff();
 void gprintf(const char *format, ...);
 void ghexdump(void *d, int len);
 
