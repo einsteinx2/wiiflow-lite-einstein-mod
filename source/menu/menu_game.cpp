@@ -475,30 +475,6 @@ void CMenu::_game(bool launch)
 			startGameSound = 1;
 			_playGameSound();
 		}
-		/* move and zoom flipped cover */
-		if(coverFlipped)
-		{
-			float step = 0.05f;
-			if(BTN_PLUS_PRESSED || BTN_MINUS_PRESSED)
-			{
-				if(BTN_MINUS_PRESSED)
-					step = -step;
-				v.z = min(max(-15.f, v.z + step), 15.f);
-			}
-			else if(BTN_LEFT_PRESSED || BTN_RIGHT_PRESSED)
-			{
-				if(BTN_RIGHT_PRESSED)
-					step = -step;
-				v.x = min(max(-15.f, v.x + step), 15.f);
-			}
-			else if(BTN_UP_PRESSED || BTN_DOWN_PRESSED)
-			{
-				if(BTN_UP_PRESSED)
-					step = -step;
-				v.y = min(max(-15.f, v.y + step), 15.f);
-			}
-			CoverFlow.setCoverFlipPos(v);
-		}
 		/* exit game menu */
 		if(BTN_HOME_PRESSED)
 		{
@@ -507,15 +483,8 @@ void CMenu::_game(bool launch)
 		}
 		else if(BTN_B_PRESSED)
 		{
-			/* de flip cover */
-			if(coverFlipped)
-			{
-				CoverFlow.flip();
-				coverFlipped = false;
-				m_banner.SetShowBanner(true);
-			}
 			/* if B on favorites btn goto game categories */
-			else if(m_btnMgr.selected(m_gameBtnFavoriteOn) || m_btnMgr.selected(m_gameBtnFavoriteOff))
+			if(m_btnMgr.selected(m_gameBtnFavoriteOn) || m_btnMgr.selected(m_gameBtnFavoriteOff))
 			{
 				_hideGame();
 				if(m_locked)
@@ -545,7 +514,7 @@ void CMenu::_game(bool launch)
 			}
 		}
 		/* display game info screen */
-		else if(BTN_PLUS_PRESSED && !NoGameID(hdr->type) && !coverFlipped && !m_video_playing)
+		else if(BTN_PLUS_PRESSED && !NoGameID(hdr->type) && !m_video_playing)
 		{
 			_hideGame();// stops trailer movie too
 			m_banner.SetShowBanner(false);
@@ -554,7 +523,7 @@ void CMenu::_game(bool launch)
 			m_banner.SetShowBanner(true);
 		}
 		/* play or stop a trailer video */
-		else if(BTN_MINUS_PRESSED && !coverFlipped)
+		else if(BTN_MINUS_PRESSED)
 		{
 			if(m_video_playing)
 			{
@@ -569,7 +538,7 @@ void CMenu::_game(bool launch)
 				_startVideo();
 		}
 		/* switch coverflow layout */
-		else if((BTN_1_PRESSED || BTN_2_PRESSED) && !coverFlipped && !m_video_playing)
+		else if((BTN_1_PRESSED || BTN_2_PRESSED) && !m_video_playing)
 		{
 			s8 direction = BTN_1_PRESSED ? 1 : -1;
 			int cfVersion = loopNum((_getCFVersion() - 1) + direction, m_numCFVersions) + 1;
@@ -669,8 +638,7 @@ void CMenu::_game(bool launch)
 				m_btnMgr.hide(m_gameBtnBackFull);
 				m_btnMgr.hide(m_gameBtnToggleFull);
 			}
-			else if(launch || m_btnMgr.selected(m_gameBtnPlay) || m_btnMgr.selected(m_gameBtnPlayFull) || 
-					(!ShowPointer() && !m_video_playing && !coverFlipped))
+			else if(launch || m_btnMgr.selected(m_gameBtnPlay) || m_btnMgr.selected(m_gameBtnPlayFull) || (!ShowPointer() && !m_video_playing))
 			{
 				_hideGame();
 				MusicPlayer.Stop();
@@ -734,27 +702,36 @@ void CMenu::_game(bool launch)
 				m_gcfg2.unload();
 				_showGame();
 			}
-			else if(!coverFlipped)
+			else
 			{
 				/* flip cover if mouse over */
 				for(int chan = WPAD_MAX_WIIMOTES-1; chan >= 0; chan--)
 				{
 					if(CoverFlow.mouseOver(m_cursor[chan].x(), m_cursor[chan].y()))
 					{
-						cf_version = _getCFVersion();
-						domain = fmt("%s_%i_S", cf_domain, cf_version);
-						key = "flip_pos";
-						if(!m_vid.wide())
-							key += "_4_3";
-						v = m_coverflow.getVector3D(domain, key);
-						coverFlipped = true;
-						CoverFlow.flip();
-						m_banner.SetShowBanner(false);
+						if(coverFlipped)
+						{
+							CoverFlow.flip();
+							coverFlipped = false;
+							m_banner.SetShowBanner(true);
+						}
+						else
+						{
+							cf_version = _getCFVersion();
+							domain = fmt("%s_%i_S", cf_domain, cf_version);
+							key = "flip_pos";
+							if(!m_vid.wide())
+								key += "_4_3";
+							v = m_coverflow.getVector3D(domain, key);
+							coverFlipped = true;
+							CoverFlow.flip();
+						}
+						
 					}
 				}
 			}
 		}
-		if(!coverFlipped && !m_video_playing)
+		if(!m_video_playing)
 		{
 			/* move to new cover if needed */
 			if((startGameSound == 1 || startGameSound < -8) && (BTN_UP_REPEAT || RIGHT_STICK_UP))
@@ -818,7 +795,7 @@ void CMenu::_game(bool launch)
 			m_btnMgr.hide(m_gameBtnBackFull);
 			m_btnMgr.hide(m_gameBtnToggleFull);
 			
-			if(m_show_zone_game && !coverFlipped && !m_video_playing)
+			if(m_show_zone_game && !m_video_playing)
 			{
 				m_btnMgr.show(m_gameBtnPlay);
 				m_btnMgr.show(m_gameBtnBack);
@@ -857,7 +834,7 @@ void CMenu::_game(bool launch)
 			}
 			
 			/* show or hide small banner toggle btn and frame */
-			if(m_banner_loaded && !m_soundThrdBusy && !coverFlipped && !m_video_playing)
+			if(m_banner_loaded && !m_soundThrdBusy && !m_video_playing)
 			{
 				/* show only if the game has a banner */
 				m_btnMgr.show(m_gameBtnToggle);
