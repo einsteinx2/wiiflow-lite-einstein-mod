@@ -433,9 +433,10 @@ bool CMenu::init()
 	/* Check if locked, set return to, set exit to, and init multi threading */
 	m_locked = m_cfg.getString("GENERAL", "parent_code", "").size() >= 4;
 	
-	/* Switch the WFLA and DWFA when using official wiiflow */
-	if(m_cfg.getString("GENERAL", "returnto", "WFLA") == "DWFA")
-		m_cfg.setString("GENERAL", "returnto", "WFLA");
+	/* Switch the to the Einstein Mod channel WFLE when switching from the official wiiflow or wiiflow lite */
+	string returnToSetting = m_cfg.getString("GENERAL", "returnto", "WFLE");
+	if(returnToSetting == "DWFA" || returnToSetting == "WFLA")
+		m_cfg.setString("GENERAL", "returnto", "WFLE");
 
 	int exit_to = m_cfg.getInt("GENERAL", "exit_to", 0);
 	if(exit_to == EXIT_TO_BOOTMII && (!DeviceHandle.IsInserted(SD) || 
