@@ -2,7 +2,7 @@
 #define APP_VERSION				"4.4.0"
 
 #define APP_DATA_DIR			"wiiflow"
-#define APPS_DIR				"apps/wiiflow_lite"
+#define APPS_DIR				"apps/wiiflow_einstein"
 
 //#define EMU_NANDS_DIR			"nands"
 #define GAMES_DIR				"%s:/wbfs"
