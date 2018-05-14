@@ -25,13 +25,80 @@ bool useMainIOS = false;
 volatile bool NANDemuView = false;
 volatile bool networkInit = false;
 
+/*  If we're not using USB, currently it waits up to 20 seconds before loading the UI.
+	So this provides an easy check to see if we have everything set to use the SD card.
+	If we do, then we can skip trying to mount USB at all. */ 
+bool isUsingUSB() {
+	// /* First check if the config file exists on the SD card, if not, not only are we definitely
+	//    using USB (or the config file doesn't exist at all, maybe first launch) and we can't do 
+	//    the other checks anyway. */
+	// struct stat dummy;
+	// const char *configFilePath = fmt("%s:/%s", DeviceName[SD], APPS_DIR);
+	// if(DeviceHandle.IsInserted(SD) && DeviceHandle.GetFSType(SD) != PART_FS_WBFS && stat(configFilePath, &dummy) == 0)
+	// {
+	// 	gprintf("isUsingUSB: No config file exists on SD card, so assuming we're using USB\n");
+	// 	return true;
+	// }
+	
+	/* First check if the app path exists on the SD card, if not then we're using USB */
+	struct stat dummy;
+	string appPath = fmt("%s:/%s", DeviceName[SD], APPS_DIR);
+	if(DeviceHandle.IsInserted(SD) && DeviceHandle.GetFSType(SD) != PART_FS_WBFS && stat(appPath.c_str(), &dummy) != 0)
+	{
+		gprintf("isUsingUSB: No app path exists on SD card, so assuming we're using USB\n");
+		return true;
+	}
+	
+	/* Check that the config file exists, or we can't do the following checks */
+	string configPath = fmt("%s/" CFG_FILENAME, appPath.c_str());
+	if(stat(configPath.c_str(), &dummy) != 0)
+	{
+		gprintf("isUsingUSB: The app path is on SD but no config file exists, so assuming we might need USB\n");
+		return true;
+	}
+	
+	/* Load the config file */
+	Config m_cfg;// = new Config();
+	if(!m_cfg.load(configPath.c_str())) 
+	{
+		gprintf("isUsingUSB: The app path is on SD and a config file exists, but we can't load it, so assuming we might need USB\n");
+		return true;
+	}
+	
+	/* If we have the WiiFlow data on USB, then we're using USB */
+	if(m_cfg.getBool(GENERAL_DOMAIN, "data_on_usb", false))
+	{
+		gprintf("isUsingUSB: data_on_usb is true, so assuming we're using USB\n");
+		return true;
+	}
+	
+	/* If any of the sections have partition set > 0, we're on USB */
+	const char *domains[] = {WII_DOMAIN, GC_DOMAIN, CHANNEL_DOMAIN, PLUGIN_DOMAIN, HOMEBREW_DOMAIN};
+	for(int i = 0; i < 5; i++)
+	{
+		if(!m_cfg.getBool(domains[i], "disable", false) && m_cfg.getInt(domains[i], "partition", SD) != SD)
+		{
+			gprintf("isUsingUSB: %s domain is enabled and partition is not SD (i.e. greater than 0), so assuming we're using USB\n", domains[i]);
+			return true;
+		}
+	}
+	
+	// if(!m_cfg.getBool(domains[WII_DOMAIN], "disable", false) && m_cfg.getInt(domains[WII_DOMAIN], "partition", SD) != SD)
+	// {
+	// 	gprintf("isUsingUSB: %s domain is enabled and partition is not SD (i.e. greater than 0), so assuming we're using USB\n");
+	// }
+	
+	gprintf("isUsingUSB: we're not using USB\n");
+	return false;
+}
+
 int main(int argc, char **argv)
 {
 	MEM_init(); //Inits both mem1lo and mem2
 	mainIOS = DOL_MAIN_IOS;// 249
     m_vid.init(); // Init video
-    /* Show first frame of the loading animation by setting a long wait time. 
-       If we animate right away, it'll stall for a second while we init ISFS */
+    /*  Show first frame of the loading animation by setting a long wait time. 
+    	If we animate right away, it'll stall for a second while we init ISFS */
     m_vid.animateWaitMessages(false); 
     m_vid.waitMessage(0.15f);
 	__exception_setreload(10);
@@ -83,7 +150,9 @@ int main(int argc, char **argv)
 	Sys_Init();
 	Sys_ExitTo(EXIT_TO_HBC);
 
-	DeviceHandle.MountAll();
+	DeviceHandle.MountSD();
+	if(isUsingUSB())
+		DeviceHandle.MountAllUSB();
 
 	Open_Inputs();
 	if(mainMenu.init())

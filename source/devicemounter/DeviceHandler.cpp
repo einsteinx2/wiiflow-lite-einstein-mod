@@ -140,6 +140,10 @@ bool DeviceHandler::MountUSB(int pos)
 
 bool DeviceHandler::MountAllUSB()
 {
+	/* NOTE: Not sure why this check is necessary, but it was used in MountAll, so I'm using it here */
+	if(Sys_DolphinMode())
+		return false;
+	
 	/* Kill possible USB thread */
 	KillUSBKeepAliveThread();
 	/* Wait for our slowass HDD */

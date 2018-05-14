@@ -17,6 +17,9 @@
 #define GAME_SETTINGS2_FILENAME	"gameconfig2.ini"
 #define PLUGIN_CRCS_FILENAME	"plugin_crc32.ini"
 
+#define GENERAL_DOMAIN          "GENERAL"
+#define DEBUG_DOMAIN            "DEBUG"
+#define GAMERCARD_DOMAIN        "GAMERCARD"
 #define WII_DOMAIN				"WII"
 #define GC_DOMAIN				"GAMECUBE"
 #define CHANNEL_DOMAIN			"CHANNELS"
