@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<app version="1">
+  <name>WiiFlow Lite Einstein Mod</name>
+  <coder>einsteinx2</coder>
+  <version>4.4.0 r3</version>
+  <release_date>20183013000000</release_date>
+  <short_description>USB Loader app</short_description>
+  <long_description>
+    WiiFlow Lite is a app for loading backup games from a USB Device or SD card.
+    It displays your games in a coverflow with 3D full box covers.
+
+    This is a modded version created by einsteinx2.
+    
+    Key features of WiiFlow Lite:
+    * Emulated NAND support
+    * Plugin system for emu apps
+    * Devolution support
+    * Nintendont support
+    * Neek2o support
+    
+    Key features of the Einstein Mod:
+    * Settings to disable GC game selection sound
+    * Improved app launch time
+    * Fixed 20 second pause when no USB drive is plugged in if you only use an SD card
+    * Launch animation now starts immediately rather than sitting at a black screen
+    * Some UI and UX improvements 
+  </long_description>
+  <no_ios_reload/>
+</app>
