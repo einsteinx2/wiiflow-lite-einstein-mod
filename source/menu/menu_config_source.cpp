@@ -94,7 +94,7 @@ void CMenu::_CfgSrc(void)
 	m_btnMgr.setText(m_cfgsrcBtnEnableSF, m_cfg.getBool(SOURCEFLOW_DOMAIN, "enabled") ? _t("on", L"On") : _t("off", L"Off"));
 	m_btnMgr.setText(m_cfgsrcBtnSmallbox, m_cfg.getBool(SOURCEFLOW_DOMAIN, "smallbox") ? _t("on", L"On") : _t("off", L"Off"));
 	m_btnMgr.setText(m_cfgsrcBtnBoxMode, m_cfg.getBool(SOURCEFLOW_DOMAIN, "box_mode") ? _t("on", L"On") : _t("off", L"Off"));
-	m_btnMgr.setText(m_cfgsrcBtnMultisource, m_cfg.getBool("GENERAL", "multisource") ? _t("on", L"On") : _t("off", L"Off"));
+	m_btnMgr.setText(m_cfgsrcBtnMultisource, m_cfg.getBool(GENERAL_DOMAIN, "multisource") ? _t("on", L"On") : _t("off", L"Off"));
 	_showCfgSrc(m_sourceflow);
 
 	while(!m_exit)
@@ -141,7 +141,7 @@ void CMenu::_CfgSrc(void)
 			else if(m_btnMgr.selected(m_cfgsrcBtnMultisource))
 			{
 				m_multisource = !m_multisource;
-				m_cfg.setBool("GENERAL", "multisource", m_multisource);
+				m_cfg.setBool(GENERAL_DOMAIN, "multisource", m_multisource);
 				m_btnMgr.setText(m_cfgsrcBtnMultisource, m_multisource ? _t("on", L"On") : _t("off", L"Off"));
 			}
 		}

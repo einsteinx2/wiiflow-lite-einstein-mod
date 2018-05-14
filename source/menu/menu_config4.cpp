@@ -57,16 +57,16 @@ void CMenu::_showConfig4(void)
 			m_btnMgr.show(m_config4LblUser[i]);
 
 	int i;
-	i = min(max(0, m_cfg.getInt("GENERAL", "exit_to", 0)), (int)ARRAY_SIZE(CMenu::_exitTo) - 1);
+	i = min(max(0, m_cfg.getInt(GENERAL_DOMAIN, "exit_to", 0)), (int)ARRAY_SIZE(CMenu::_exitTo) - 1);
 	m_btnMgr.setText(m_config4BtnHome, _t(CMenu::_exitTo[i].id, CMenu::_exitTo[i].text));
-	m_btnMgr.setText(m_config4BtnSaveFavMode, m_cfg.getBool("GENERAL", "save_favorites_mode") ? _t("on", L"On") : _t("off", L"Off"));
+	m_btnMgr.setText(m_config4BtnSaveFavMode, m_cfg.getBool(GENERAL_DOMAIN, "save_favorites_mode") ? _t("on", L"On") : _t("off", L"Off"));
 
 	custom_titles.load(fmt("%s/" CTITLES_FILENAME, m_settingsDir.c_str()));
 
 	ChannelHandle.Init(m_loc.getString(m_curLanguage, "gametdb_code", "EN"));
 	amountOfChannels = ChannelHandle.Count();
 	wstringEx channelName = m_loc.getWString(m_curLanguage, "disabled", L"Disabled");
-	const string &currentChanId = m_cfg.getString("GENERAL", "returnto");
+	const string &currentChanId = m_cfg.getString(GENERAL_DOMAIN, "returnto");
 	currentChannelIndex = -1;
 	if(!currentChanId.empty())
 	{
@@ -98,14 +98,14 @@ int CMenu::_config4(void)
 		{
 			if (m_btnMgr.selected(m_config4BtnHome))
 			{
-				int exit_to = (int)loopNum(m_cfg.getUInt("GENERAL", "exit_to", 0) + 1, ARRAY_SIZE(CMenu::_exitTo));
-				m_cfg.setInt("GENERAL", "exit_to", exit_to);
+				int exit_to = (int)loopNum(m_cfg.getUInt(GENERAL_DOMAIN, "exit_to", 0) + 1, ARRAY_SIZE(CMenu::_exitTo));
+				m_cfg.setInt(GENERAL_DOMAIN, "exit_to", exit_to);
 				Sys_ExitTo(exit_to + 1);
 				_showConfig4();
 			}
 			else if (m_btnMgr.selected(m_config4BtnSaveFavMode))
 			{
-				m_cfg.setBool("GENERAL", "save_favorites_mode", !m_cfg.getBool("GENERAL", "save_favorites_mode"));
+				m_cfg.setBool(GENERAL_DOMAIN, "save_favorites_mode", !m_cfg.getBool(GENERAL_DOMAIN, "save_favorites_mode"));
 				_showConfig4();
 			}
 			else if (m_btnMgr.selected(m_config4BtnPathManager))
@@ -117,9 +117,9 @@ int CMenu::_config4(void)
 			else if (m_btnMgr.selected(m_config4BtnReturnToP))
 			{
 				if(currentChannelIndex >= (amountOfChannels - 1))
-					m_cfg.remove("GENERAL", "returnto");
+					m_cfg.remove(GENERAL_DOMAIN, "returnto");
 				else
-					m_cfg.setString("GENERAL", "returnto", ChannelHandle.GetId(currentChannelIndex + 1));
+					m_cfg.setString(GENERAL_DOMAIN, "returnto", ChannelHandle.GetId(currentChannelIndex + 1));
 				_showConfig4();
 			}
 			else if (m_btnMgr.selected(m_config4BtnReturnToM))
@@ -127,9 +127,9 @@ int CMenu::_config4(void)
 				if(currentChannelIndex == -1)
 					currentChannelIndex = amountOfChannels;
 				if((currentChannelIndex - 1) == -1)
-					m_cfg.remove("GENERAL", "returnto");
+					m_cfg.remove(GENERAL_DOMAIN, "returnto");
 				else
-					m_cfg.setString("GENERAL", "returnto", ChannelHandle.GetId(currentChannelIndex - 1));
+					m_cfg.setString(GENERAL_DOMAIN, "returnto", ChannelHandle.GetId(currentChannelIndex - 1));
 				_showConfig4();
 			}
 		}

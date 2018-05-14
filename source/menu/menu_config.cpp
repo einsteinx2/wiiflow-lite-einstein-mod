@@ -156,7 +156,7 @@ int CMenu::_config1(void)
 			{
 				char code[4];
 				_hideConfig();
-				if (_code(code) && memcmp(code, m_cfg.getString("GENERAL", "parent_code", "").c_str(), 4) == 0)
+				if (_code(code) && memcmp(code, m_cfg.getString(GENERAL_DOMAIN, "parent_code", "").c_str(), 4) == 0)
 				{
 					m_refreshGameList = true;
 					m_locked = false;
@@ -172,7 +172,7 @@ int CMenu::_config1(void)
 				if (_code(code, true))
 				{
 					m_refreshGameList = true;
-					m_cfg.setString("GENERAL", "parent_code", string(code, 4).c_str());
+					m_cfg.setString(GENERAL_DOMAIN, "parent_code", string(code, 4).c_str());
 					m_locked = true;
 				}
 				_showConfig();

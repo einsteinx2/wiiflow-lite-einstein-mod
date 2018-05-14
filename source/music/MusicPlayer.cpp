@@ -47,8 +47,8 @@ static inline void FileNameAdder(char *Path)
 void Musicplayer::Init(Config &cfg, const string& musicDir, const string& themeMusicDir) 
 {
 	Cleanup();
-	FadeRate = cfg.getInt("GENERAL", "music_fade_rate", 8);
-	Volume = cfg.getInt("GENERAL", "sound_volume_music", 255);
+	FadeRate = cfg.getInt(GENERAL_DOMAIN, "music_fade_rate", 8);
+	Volume = cfg.getInt(GENERAL_DOMAIN, "sound_volume_music", 255);
 
 	SetVolume(0);
 	MusicFile.SetVoice(0);
@@ -56,7 +56,7 @@ void Musicplayer::Init(Config &cfg, const string& musicDir, const string& themeM
 	vector<string> Types = stringToVector(".mp3|.ogg", '|');
 	GetFiles(musicDir.c_str(), Types, FileNameAdder, false, MUSIC_DEPTH);
 	GetFiles(themeMusicDir.c_str(), Types, FileNameAdder, false, MUSIC_DEPTH);
-	if(cfg.getBool("GENERAL", "randomize_music", true) && FileNames.size() > 0)
+	if(cfg.getBool(GENERAL_DOMAIN, "randomize_music", true) && FileNames.size() > 0)
 	{
 		srand(unsigned(time(NULL)));
 		random_shuffle(FileNames.begin(), FileNames.end());

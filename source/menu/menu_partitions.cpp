@@ -80,9 +80,9 @@ void CMenu::_showPartitionsCfg(void)
 
 	const char *partitionname = DeviceName[m_cfg.getInt(WII_DOMAIN, "partition", 0)];
 	m_btnMgr.setText(m_partitionsLblWiiVal, upperCase(partitionname));
-	partitionname = DeviceName[m_cfg.getInt(GC_DOMAIN, "partition", 0)];
+	partitionname = DeviceName[m_cfg.getInt(GAMECUBE_DOMAIN, "partition", 0)];
 	m_btnMgr.setText(m_partitionsLblGCVal, upperCase(partitionname));
-	partitionname = DeviceName[m_cfg.getInt(CHANNEL_DOMAIN, "partition", 0)];
+	partitionname = DeviceName[m_cfg.getInt(CHANNELS_DOMAIN, "partition", 0)];
 	m_btnMgr.setText(m_partitionsLblChannelsVal, upperCase(partitionname));
 	partitionname = DeviceName[m_cfg.getInt(PLUGIN_DOMAIN, "partition", 0)];
 	m_btnMgr.setText(m_partitionsLblPluginVal, upperCase(partitionname));
@@ -121,7 +121,7 @@ void CMenu::_partitionsCfg(void)
 			else if(m_btnMgr.selected(m_partitionsBtnGCP) || m_btnMgr.selected(m_partitionsBtnGCM))
 			{
 				s8 direction = m_btnMgr.selected(m_partitionsBtnGCP) ? 1 : -1;
-				currentPartition = m_cfg.getInt(GC_DOMAIN, "partition");
+				currentPartition = m_cfg.getInt(GAMECUBE_DOMAIN, "partition");
 				m_current_view = COVERFLOW_GAMECUBE;
 				_setPartition(direction);
 				_showPartitionsCfg();
@@ -131,7 +131,7 @@ void CMenu::_partitionsCfg(void)
 			else if(m_btnMgr.selected(m_partitionsBtnChannelsP) || m_btnMgr.selected(m_partitionsBtnChannelsM))
 			{
 				s8 direction = m_btnMgr.selected(m_partitionsBtnChannelsP) ? 1 : -1;
-				currentPartition = m_cfg.getInt(CHANNEL_DOMAIN, "partition");
+				currentPartition = m_cfg.getInt(CHANNELS_DOMAIN, "partition");
 				m_current_view = COVERFLOW_CHANNEL;
 				_setPartition(direction);
 				_showPartitionsCfg();

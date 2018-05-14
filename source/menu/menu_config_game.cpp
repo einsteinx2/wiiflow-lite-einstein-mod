@@ -154,7 +154,7 @@ void CMenu::_showGameSettings()
 	if(GameHdr->type == TYPE_GC_GAME)
 	{
 		GCLoader = min(m_gcfg2.getUInt(id, "gc_loader", 0), ARRAY_SIZE(CMenu::_GCLoader) - 1u);
-		GCLoader = (GCLoader == 0) ? min(m_cfg.getUInt(GC_DOMAIN, "default_loader", 1), ARRAY_SIZE(CMenu::_GlobalGCLoaders) - 1u) : GCLoader-1;
+		GCLoader = (GCLoader == 0) ? min(m_cfg.getUInt(GAMECUBE_DOMAIN, "default_loader", 1), ARRAY_SIZE(CMenu::_GlobalGCLoaders) - 1u) : GCLoader-1;
 	}
 	
 	m_gameSettingsMaxPgs = 5;

@@ -49,7 +49,7 @@ bool CMenu::_Home(void)
 	SetupInput();
 	_showHome();
 
-	string prevTheme = m_cfg.getString("GENERAL", "theme", "default");
+	string prevTheme = m_cfg.getString(GENERAL_DOMAIN, "theme", "default");
 	while(!m_exit)
 	{
 		/* battery gets refreshed in here... */
@@ -81,9 +81,9 @@ bool CMenu::_Home(void)
 				if(m_current_view & COVERFLOW_WII)
 					m_cfg.setBool(WII_DOMAIN, "update_cache", true);
 				if(m_current_view & COVERFLOW_GAMECUBE)
-					m_cfg.setBool(GC_DOMAIN, "update_cache", true);
+					m_cfg.setBool(GAMECUBE_DOMAIN, "update_cache", true);
 				if(m_current_view & COVERFLOW_CHANNEL)
-					m_cfg.setBool(CHANNEL_DOMAIN, "update_cache", true);
+					m_cfg.setBool(CHANNELS_DOMAIN, "update_cache", true);
 				if(m_current_view & COVERFLOW_PLUGIN)
 					m_cfg.setBool(PLUGIN_DOMAIN, "update_cache", true);
 				m_refreshGameList = true;

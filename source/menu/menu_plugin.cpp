@@ -171,12 +171,12 @@ void CMenu::_PluginSettings()
 	m_plugin.GetEnabledPlugins(m_cfg, &enabledPluginsCount);
 	if(m_refreshGameList && enabledPluginsCount > 0)
 	{
-		m_cfg.setUInt("GENERAL", "sources", m_current_view);
+		m_cfg.setUInt(GENERAL_DOMAIN, "sources", m_current_view);
 		m_source_cnt = 1;
 		m_catStartPage = 1;
 	}
 	else
-		m_current_view = m_cfg.getUInt("GENERAL", "sources");
+		m_current_view = m_cfg.getUInt(GENERAL_DOMAIN, "sources");
 }
 
 void CMenu::_initPluginSettingsMenu()

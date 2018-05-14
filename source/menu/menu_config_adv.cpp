@@ -68,7 +68,7 @@ void CMenu::_showConfigAdv(void)
 		if(m_configAdvLblUser[i] != -1)
 			m_btnMgr.show(m_configAdvLblUser[i]);
 
-	m_btnMgr.setText(m_configAdvLblCurTheme, m_cfg.getString("GENERAL", "theme"));
+	m_btnMgr.setText(m_configAdvLblCurTheme, m_cfg.getString(GENERAL_DOMAIN, "theme"));
 	m_btnMgr.setText(m_configAdvLblCurLanguage, m_curLanguage);
 }
 
@@ -103,7 +103,7 @@ int CMenu::_configAdv(void)
 	int change = CONFIG_PAGE_NO_CHANGE;
 	
 	vector<string> themes;
-	string prevTheme = m_cfg.getString("GENERAL", "theme");
+	string prevTheme = m_cfg.getString(GENERAL_DOMAIN, "theme");
 	listThemes(m_themeDir.c_str(), themes);
 	int curTheme = 0;
 	for (u32 i = 0; i < themes.size(); ++i)
@@ -147,7 +147,7 @@ int CMenu::_configAdv(void)
 			{
 				s8 direction = m_btnMgr.selected(m_configAdvBtnCurThemeP) ? 1 : -1;
 				curTheme = loopNum(curTheme + direction, (int)themes.size());
-				m_cfg.setString("GENERAL", "theme", themes[curTheme]);
+				m_cfg.setString(GENERAL_DOMAIN, "theme", themes[curTheme]);
 				_showConfigAdv();
 			}
 			else if(m_btnMgr.selected(m_configAdvBtnCurLanguageP) || m_btnMgr.selected(m_configAdvBtnCurLanguageM))
@@ -158,11 +158,11 @@ int CMenu::_configAdv(void)
 				if(!m_loc.load(fmt("%s/%s.ini", m_languagesDir.c_str(), m_curLanguage.c_str())))
 				{
 					m_curLanguage = "Default";
-					m_cfg.setString("GENERAL", "language", m_curLanguage.c_str());
+					m_cfg.setString(GENERAL_DOMAIN, "language", m_curLanguage.c_str());
 					m_loc.unload();
 				}
 				else
-					m_cfg.setString("GENERAL", "language", m_curLanguage.c_str());
+					m_cfg.setString(GENERAL_DOMAIN, "language", m_curLanguage.c_str());
 				lang_changed = true;
 				_updateText();
 				_showConfigAdv();

@@ -73,7 +73,7 @@ bool isUsingUSB() {
 	}
 	
 	/* If any of the sections have partition set > 0, we're on USB */
-	const char *domains[] = {WII_DOMAIN, GC_DOMAIN, CHANNEL_DOMAIN, PLUGIN_DOMAIN, HOMEBREW_DOMAIN};
+	const char *domains[] = {WII_DOMAIN, GAMECUBE_DOMAIN, CHANNELS_DOMAIN, PLUGIN_DOMAIN, HOMEBREW_DOMAIN};
 	for(int i = 0; i < 5; i++)
 	{
 		if(!m_cfg.getBool(domains[i], "disable", false) && m_cfg.getInt(domains[i], "partition", SD) != SD)
@@ -82,11 +82,6 @@ bool isUsingUSB() {
 			return true;
 		}
 	}
-	
-	// if(!m_cfg.getBool(domains[WII_DOMAIN], "disable", false) && m_cfg.getInt(domains[WII_DOMAIN], "partition", SD) != SD)
-	// {
-	// 	gprintf("isUsingUSB: %s domain is enabled and partition is not SD (i.e. greater than 0), so assuming we're using USB\n");
-	// }
 	
 	gprintf("isUsingUSB: we're not using USB\n");
 	return false;

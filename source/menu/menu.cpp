@@ -152,19 +152,19 @@ bool CMenu::init()
 	
 	/* Load/Create wiiflow.ini so we can get settings to start Gecko and Network */
 	m_cfg.load(fmt("%s/" CFG_FILENAME, m_appDir.c_str()));
-	show_mem = m_cfg.getBool("DEBUG", "show_mem", false);
+	show_mem = m_cfg.getBool(DEBUG_DOMAIN, "show_mem", false);
 	/* Check if we want WiFi Gecko */
-	m_use_wifi_gecko = m_cfg.getBool("DEBUG", "wifi_gecko", false);
+	m_use_wifi_gecko = m_cfg.getBool(DEBUG_DOMAIN, "wifi_gecko", false);
 	WiFiDebugger.SetBuffer(m_use_wifi_gecko);
 	/* Check if we want SD Gecko */
-	m_use_sd_logging = m_cfg.getBool("DEBUG", "sd_write_log", false);
+	m_use_sd_logging = m_cfg.getBool(DEBUG_DOMAIN, "sd_write_log", false);
 	LogToSD_SetBuffer(m_use_sd_logging);
 	/* Init Network if wanted */
-	m_init_network = (m_cfg.getBool("GENERAL", "async_network") || has_enabled_providers() || m_use_wifi_gecko);
+	m_init_network = (m_cfg.getBool(GENERAL_DOMAIN, "async_network") || has_enabled_providers() || m_use_wifi_gecko);
 	_netInit();
 	
 	/* Try to find/make the wiiflow data directory */
-	bool onUSB = m_cfg.getBool("GENERAL", "data_on_usb", strncmp(drive, "usb", 3) == 0);
+	bool onUSB = m_cfg.getBool(GENERAL_DOMAIN, "data_on_usb", strncmp(drive, "usb", 3) == 0);
 	drive = check; //reset the drive variable for the check
 	//check for wiiflow data directory on USB or SD based on data_on_usb
 	if(onUSB)
@@ -224,12 +224,12 @@ bool CMenu::init()
 	m_devo_installed = DEVO_Installed(m_dataDir.c_str());
 	m_nintendont_installed = Nintendont_Installed();
 	memset(gc_games_dir, 0, 64);
-	strncpy(gc_games_dir, m_cfg.getString(GC_DOMAIN, "gc_games_dir", DF_GC_GAMES_DIR).c_str(), 64);
+	strncpy(gc_games_dir, m_cfg.getString(GAMECUBE_DOMAIN, "gc_games_dir", DF_GC_GAMES_DIR).c_str(), 64);
 	if(strncmp(gc_games_dir, "%s:/", 4) != 0)
 		strcpy(gc_games_dir, DF_GC_GAMES_DIR);
 	gprintf("GameCube Games Directory: %s\n", gc_games_dir);
-    m_gc_play_banner_sound = m_cfg.getBool(GC_DOMAIN, "play_banner_sound", true);
-    m_gc_play_default_sound = m_cfg.getBool(GC_DOMAIN, "play_default_sound", true);
+    m_gc_play_banner_sound = m_cfg.getBool(GAMECUBE_DOMAIN, "play_banner_sound", true);
+    m_gc_play_default_sound = m_cfg.getBool(GAMECUBE_DOMAIN, "play_default_sound", true);
 	
 	/* Load cIOS Map */
 	_installed_cios.clear();
@@ -247,28 +247,28 @@ bool CMenu::init()
 	m_imgsDir = fmt("%s/imgs", m_appDir.c_str());
 	m_binsDir = fmt("%s/bins", m_appDir.c_str());
 
-	m_sourceDir = m_cfg.getString("GENERAL", "dir_Source", fmt("%s/source_menu", m_dataDir.c_str()));
-	m_customBnrDir = m_cfg.getString("GENERAL", "dir_custom_banners", fmt("%s/custom_banners", m_dataDir.c_str()));
-	m_pluginsDir = m_cfg.getString("GENERAL", "dir_plugins", fmt("%s/plugins", m_dataDir.c_str()));
+	m_sourceDir = m_cfg.getString(GENERAL_DOMAIN, "dir_Source", fmt("%s/source_menu", m_dataDir.c_str()));
+	m_customBnrDir = m_cfg.getString(GENERAL_DOMAIN, "dir_custom_banners", fmt("%s/custom_banners", m_dataDir.c_str()));
+	m_pluginsDir = m_cfg.getString(GENERAL_DOMAIN, "dir_plugins", fmt("%s/plugins", m_dataDir.c_str()));
 
-	m_cacheDir = m_cfg.getString("GENERAL", "dir_cache", fmt("%s/cache", m_dataDir.c_str()));
-	m_listCacheDir = m_cfg.getString("GENERAL", "dir_list_cache", fmt("%s/lists", m_cacheDir.c_str()));
-	m_bnrCacheDir = m_cfg.getString("GENERAL", "dir_banner_cache", fmt("%s/banners", m_cacheDir.c_str()));
+	m_cacheDir = m_cfg.getString(GENERAL_DOMAIN, "dir_cache", fmt("%s/cache", m_dataDir.c_str()));
+	m_listCacheDir = m_cfg.getString(GENERAL_DOMAIN, "dir_list_cache", fmt("%s/lists", m_cacheDir.c_str()));
+	m_bnrCacheDir = m_cfg.getString(GENERAL_DOMAIN, "dir_banner_cache", fmt("%s/banners", m_cacheDir.c_str()));
 
-	m_txtCheatDir = m_cfg.getString("GENERAL", "dir_txtcheat", fmt("%s/codes", m_dataDir.c_str()));
-	m_cheatDir = m_cfg.getString("GENERAL", "dir_cheat", fmt("%s/gct", m_txtCheatDir.c_str()));
-	m_wipDir = m_cfg.getString("GENERAL", "dir_wip", fmt("%s/wip", m_txtCheatDir.c_str()));
+	m_txtCheatDir = m_cfg.getString(GENERAL_DOMAIN, "dir_txtcheat", fmt("%s/codes", m_dataDir.c_str()));
+	m_cheatDir = m_cfg.getString(GENERAL_DOMAIN, "dir_cheat", fmt("%s/gct", m_txtCheatDir.c_str()));
+	m_wipDir = m_cfg.getString(GENERAL_DOMAIN, "dir_wip", fmt("%s/wip", m_txtCheatDir.c_str()));
 
-	m_settingsDir = m_cfg.getString("GENERAL", "dir_settings", fmt("%s/settings", m_dataDir.c_str()));
-	m_languagesDir = m_cfg.getString("GENERAL", "dir_languages", fmt("%s/languages", m_dataDir.c_str()));
-	m_boxPicDir = m_cfg.getString("GENERAL", "dir_box_covers", fmt("%s/boxcovers", m_dataDir.c_str()));
-	m_picDir = m_cfg.getString("GENERAL", "dir_flat_covers", fmt("%s/covers", m_dataDir.c_str()));
-	m_themeDir = m_cfg.getString("GENERAL", "dir_themes_lite", fmt("%s/themes_lite", m_dataDir.c_str()));
-	m_musicDir = m_cfg.getString("GENERAL", "dir_music", fmt("%s/music", m_dataDir.c_str())); 
-	m_videoDir = m_cfg.getString("GENERAL", "dir_trailers", fmt("%s/trailers", m_dataDir.c_str()));
-	m_fanartDir = m_cfg.getString("GENERAL", "dir_fanart", fmt("%s/fanart", m_dataDir.c_str()));
-	m_screenshotDir = m_cfg.getString("GENERAL", "dir_screenshot", fmt("%s/screenshots", m_dataDir.c_str()));
-	m_helpDir = m_cfg.getString("GENERAL", "dir_help", fmt("%s/help", m_dataDir.c_str()));
+	m_settingsDir = m_cfg.getString(GENERAL_DOMAIN, "dir_settings", fmt("%s/settings", m_dataDir.c_str()));
+	m_languagesDir = m_cfg.getString(GENERAL_DOMAIN, "dir_languages", fmt("%s/languages", m_dataDir.c_str()));
+	m_boxPicDir = m_cfg.getString(GENERAL_DOMAIN, "dir_box_covers", fmt("%s/boxcovers", m_dataDir.c_str()));
+	m_picDir = m_cfg.getString(GENERAL_DOMAIN, "dir_flat_covers", fmt("%s/covers", m_dataDir.c_str()));
+	m_themeDir = m_cfg.getString(GENERAL_DOMAIN, "dir_themes_lite", fmt("%s/themes_lite", m_dataDir.c_str()));
+	m_musicDir = m_cfg.getString(GENERAL_DOMAIN, "dir_music", fmt("%s/music", m_dataDir.c_str())); 
+	m_videoDir = m_cfg.getString(GENERAL_DOMAIN, "dir_trailers", fmt("%s/trailers", m_dataDir.c_str()));
+	m_fanartDir = m_cfg.getString(GENERAL_DOMAIN, "dir_fanart", fmt("%s/fanart", m_dataDir.c_str()));
+	m_screenshotDir = m_cfg.getString(GENERAL_DOMAIN, "dir_screenshot", fmt("%s/screenshots", m_dataDir.c_str()));
+	m_helpDir = m_cfg.getString(GENERAL_DOMAIN, "dir_help", fmt("%s/help", m_dataDir.c_str()));
 	
 	/* Create our Folder Structure */
 	fsop_MakeFolder(m_dataDir.c_str()); //D'OH!
@@ -319,20 +319,20 @@ bool CMenu::init()
 	_checkEmuNandSettings();
 	
 	/* Cache Reload Checks */
-	int ini_rev = m_cfg.getInt("GENERAL", "ini_rev", 0);
+	int ini_rev = m_cfg.getInt(GENERAL_DOMAIN, "ini_rev", 0);
 	if(ini_rev != SVN_REV_NUM)
 	{
 		fsop_deleteFolder(m_listCacheDir.c_str());
 		fsop_MakeFolder(m_listCacheDir.c_str());
 	}
-	m_cfg.setInt("GENERAL", "ini_rev", SVN_REV_NUM);
+	m_cfg.setInt(GENERAL_DOMAIN, "ini_rev", SVN_REV_NUM);
 	
 	CoverFlow.init(m_base_font, m_base_font_size, m_vid.vid_50hz());
 
 	/* Load categories and theme INI files */
 	m_cat.load(fmt("%s/" CAT_FILENAME, m_settingsDir.c_str()));
 	m_gcfg1.load(fmt("%s/" GAME_SETTINGS1_FILENAME, m_settingsDir.c_str()));
-	string themeName = m_cfg.getString("GENERAL", "theme", "default");
+	string themeName = m_cfg.getString(GENERAL_DOMAIN, "theme", "default");
 	m_themeDataDir = fmt("%s/%s", m_themeDir.c_str(), themeName.c_str());
 	m_theme.load(fmt("%s.ini", m_themeDataDir.c_str()));
 	m_coverflow.load(fmt("%s/coverflows/%s.ini", m_themeDir.c_str(), themeName.c_str()));
@@ -396,11 +396,11 @@ bool CMenu::init()
 	if (CONF_GetArea() == CONF_AREA_BRA)
 		defLang = "brazilian";
 
-	m_curLanguage = m_cfg.getString("GENERAL", "language", defLang);
+	m_curLanguage = m_cfg.getString(GENERAL_DOMAIN, "language", defLang);
 	if(!m_loc.load(fmt("%s/%s.ini", m_languagesDir.c_str(), m_curLanguage.c_str())))
 	{
 		m_curLanguage = "Default";
-		m_cfg.setString("GENERAL", "language", m_curLanguage.c_str());
+		m_cfg.setString(GENERAL_DOMAIN, "language", m_curLanguage.c_str());
 		m_loc.unload();
 	}
 
@@ -409,21 +409,21 @@ bool CMenu::init()
 
 	/* Init the onscreen pointer */
 	m_aa = 3;
-	CColor pShadowColor = m_theme.getColor("GENERAL", "pointer_shadow_color", CColor(0x3F000000));
-	float pShadowX = m_theme.getFloat("GENERAL", "pointer_shadow_x", 3.f);
-	float pShadowY = m_theme.getFloat("GENERAL", "pointer_shadow_y", 3.f);
-	bool pShadowBlur = m_theme.getBool("GENERAL", "pointer_shadow_blur", false);
+	CColor pShadowColor = m_theme.getColor(GENERAL_DOMAIN, "pointer_shadow_color", CColor(0x3F000000));
+	float pShadowX = m_theme.getFloat(GENERAL_DOMAIN, "pointer_shadow_x", 3.f);
+	float pShadowY = m_theme.getFloat(GENERAL_DOMAIN, "pointer_shadow_y", 3.f);
+	bool pShadowBlur = m_theme.getBool(GENERAL_DOMAIN, "pointer_shadow_blur", false);
 
 	for(int chan = WPAD_MAX_WIIMOTES-2; chan >= 0; chan--)
 	{
-		m_cursor[chan].init(fmt("%s/%s", m_themeDataDir.c_str(), m_theme.getString("GENERAL", fmt("pointer%i", chan+1)).c_str()),
+		m_cursor[chan].init(fmt("%s/%s", m_themeDataDir.c_str(), m_theme.getString(GENERAL_DOMAIN, fmt("pointer%i", chan+1)).c_str()),
 			m_vid.wide(), pShadowColor, pShadowX, pShadowY, pShadowBlur, chan);
 		WPAD_SetVRes(chan, m_vid.width() + m_cursor[chan].width(), m_vid.height() + m_cursor[chan].height());
 	}
 
 	/* Init background Music Player and song info */
 	MusicPlayer.Init(m_cfg, m_musicDir, fmt("%s/music", m_themeDataDir.c_str()));
-	m_music_info = m_cfg.getBool("GENERAL", "display_music_info", false);
+	m_music_info = m_cfg.getBool(GENERAL_DOMAIN, "display_music_info", false);
 
 	/* Init Button Manager and build the menus */
 	_buildMenus();
@@ -431,14 +431,14 @@ bool CMenu::init()
 		error(_fmt("errboot5", L"data_on_usb=yes and No available usb partitions for data!\nUsing SD."));
 
 	/* Check if locked, set return to, set exit to, and init multi threading */
-	m_locked = m_cfg.getString("GENERAL", "parent_code", "").size() >= 4;
+	m_locked = m_cfg.getString(GENERAL_DOMAIN, "parent_code", "").size() >= 4;
 	
 	/* Switch the to the Einstein Mod channel WFLE when switching from the official wiiflow or wiiflow lite */
-	string returnToSetting = m_cfg.getString("GENERAL", "returnto", "WFLE");
+	string returnToSetting = m_cfg.getString(GENERAL_DOMAIN, "returnto", "WFLE");
 	if(returnToSetting == "DWFA" || returnToSetting == "WFLA")
-		m_cfg.setString("GENERAL", "returnto", "WFLE");
+		m_cfg.setString(GENERAL_DOMAIN, "returnto", "WFLE");
 
-	int exit_to = m_cfg.getInt("GENERAL", "exit_to", 0);
+	int exit_to = m_cfg.getInt(GENERAL_DOMAIN, "exit_to", 0);
 	if(exit_to == EXIT_TO_BOOTMII && (!DeviceHandle.IsInserted(SD) || 
 			stat(fmt("%s:/bootmii/armboot.bin",DeviceName[SD]), &dummy) != 0 || 
 			stat(fmt("%s:/bootmii/ppcboot.elf", DeviceName[SD]), &dummy) != 0))
@@ -448,20 +448,20 @@ bool CMenu::init()
 	LWP_MutexInit(&m_mutex, 0);
 
 	/* set sound volumes */
-	CoverFlow.setSoundVolume(m_cfg.getInt("GENERAL", "sound_volume_coverflow", 255));
-	m_btnMgr.setSoundVolume(m_cfg.getInt("GENERAL", "sound_volume_gui", 255));
-	m_bnrSndVol = m_cfg.getInt("GENERAL", "sound_volume_bnr", 255);
-	m_bnr_settings = m_cfg.getBool("GENERAL", "banner_in_settings", true);
+	CoverFlow.setSoundVolume(m_cfg.getInt(GENERAL_DOMAIN, "sound_volume_coverflow", 255));
+	m_btnMgr.setSoundVolume(m_cfg.getInt(GENERAL_DOMAIN, "sound_volume_gui", 255));
+	m_bnrSndVol = m_cfg.getInt(GENERAL_DOMAIN, "sound_volume_bnr", 255);
+	m_bnr_settings = m_cfg.getBool(GENERAL_DOMAIN, "banner_in_settings", true);
 
 	/* Init gamer tags */
-	m_cfg.setString("GAMERCARD", "gamercards", "wiinnertag|dutag");
-	m_cfg.getString("GAMERCARD", "wiinnertag_url", WIINNERTAG_URL);
-	m_cfg.getString("GAMERCARD", "wiinnertag_key", "");
-	m_cfg.getString("GAMERCARD", "dutag_url", DUTAG_URL);
-	m_cfg.getString("GAMERCARD", "dutag_key", "");
-	if (m_cfg.getBool("GAMERCARD", "gamercards_enable", false))
+	m_cfg.setString(GAMERCARD_DOMAIN, "gamercards", "wiinnertag|dutag");
+	m_cfg.getString(GAMERCARD_DOMAIN, "wiinnertag_url", WIINNERTAG_URL);
+	m_cfg.getString(GAMERCARD_DOMAIN, "wiinnertag_key", "");
+	m_cfg.getString(GAMERCARD_DOMAIN, "dutag_url", DUTAG_URL);
+	m_cfg.getString(GAMERCARD_DOMAIN, "dutag_key", "");
+	if (m_cfg.getBool(GAMERCARD_DOMAIN, "gamercards_enable", false))
 	{
-		vector<string> gamercards = stringToVector(m_cfg.getString("GAMERCARD", "gamercards"), '|');
+		vector<string> gamercards = stringToVector(m_cfg.getString(GAMERCARD_DOMAIN, "gamercards"), '|');
 		if (gamercards.size() == 0)
 		{
 			gamercards.push_back("wiinnertag");
@@ -472,8 +472,8 @@ bool CMenu::init()
 		{
 			gprintf("Found gamercard provider: %s\n",(*itr).c_str());
 			register_card_provider(
-				m_cfg.getString("GAMERCARD", fmt("%s_url", (*itr).c_str())).c_str(),
-				m_cfg.getString("GAMERCARD", fmt("%s_key", (*itr).c_str())).c_str()
+				m_cfg.getString(GAMERCARD_DOMAIN, fmt("%s_url", (*itr).c_str())).c_str(),
+				m_cfg.getString(GAMERCARD_DOMAIN, fmt("%s_key", (*itr).c_str())).c_str()
 			);
 		}
 	}
@@ -645,9 +645,9 @@ void CMenu::_loadCFCfg()
 	const char *domain = "_COVERFLOW";
 
 	//gprintf("Preparing to load sounds from %s\n", m_themeDataDir.c_str());
-	CoverFlow.setCachePath(m_cacheDir.c_str(), !m_cfg.getBool("GENERAL", "keep_png", true),
-		m_cfg.getBool("GENERAL", "compress_cache", false), m_cfg.getBool(PLUGIN_DOMAIN, "subfolder_cache", true));
-	CoverFlow.setBufferSize(m_cfg.getInt("GENERAL", "cover_buffer", 20));
+	CoverFlow.setCachePath(m_cacheDir.c_str(), !m_cfg.getBool(GENERAL_DOMAIN, "keep_png", true),
+		m_cfg.getBool(GENERAL_DOMAIN, "compress_cache", false), m_cfg.getBool(PLUGIN_DOMAIN, "subfolder_cache", true));
+	CoverFlow.setBufferSize(m_cfg.getInt(GENERAL_DOMAIN, "cover_buffer", 20));
 	// Coverflow Sounds
 	CoverFlow.setSounds(
 		new GuiSound(fmt("%s/%s", m_themeDataDir.c_str(), m_theme.getString(domain, "sound_flip").c_str())),
@@ -727,7 +727,7 @@ void CMenu::_loadCFLayout(int version, bool forceAA, bool otherScrnFmt)
 	bool sf = otherScrnFmt;
 
 	int max_fsaa = m_coverflow.getInt(domain, "max_fsaa", 3);
-	_setAA(forceAA ? max_fsaa : min(max_fsaa, m_cfg.getInt("GENERAL", "max_fsaa", 3)));
+	_setAA(forceAA ? max_fsaa : min(max_fsaa, m_cfg.getInt(GENERAL_DOMAIN, "max_fsaa", 3)));
 
 	CoverFlow.setTextureQuality(m_coverflow.getFloat(domain, "tex_lod_bias", -3.f),
 		m_coverflow.getInt(domain, "tex_aniso", 2),
@@ -948,38 +948,38 @@ void CMenu::_loadCFLayout(int version, bool forceAA, bool otherScrnFmt)
 void CMenu::_buildMenus(void)
 {
 	m_btnMgr.init();
-	m_btnMgr.setRumble(m_cfg.getBool("GENERAL", "rumble", true));
+	m_btnMgr.setRumble(m_cfg.getBool(GENERAL_DOMAIN, "rumble", true));
 	// Default fonts
-	theme.btnFont = _font("GENERAL", "button_font", BUTTONFONT);
-	theme.btnFontColor = m_theme.getColor("GENERAL", "button_font_color", 0xD0BFDFFF);
+	theme.btnFont = _font(GENERAL_DOMAIN, "button_font", BUTTONFONT);
+	theme.btnFontColor = m_theme.getColor(GENERAL_DOMAIN, "button_font_color", 0xD0BFDFFF);
 
-	theme.lblFont = _font("GENERAL", "label_font", LABELFONT);
-	theme.lblFontColor = m_theme.getColor("GENERAL", "label_font_color", 0xD0BFDFFF);
+	theme.lblFont = _font(GENERAL_DOMAIN, "label_font", LABELFONT);
+	theme.lblFontColor = m_theme.getColor(GENERAL_DOMAIN, "label_font_color", 0xD0BFDFFF);
 
-	theme.titleFont = _font("GENERAL", "title_font", TITLEFONT);
-	theme.titleFontColor = m_theme.getColor("GENERAL", "title_font_color", 0xFFFFFFFF);
+	theme.titleFont = _font(GENERAL_DOMAIN, "title_font", TITLEFONT);
+	theme.titleFontColor = m_theme.getColor(GENERAL_DOMAIN, "title_font_color", 0xFFFFFFFF);
 
-	theme.txtFont = _font("GENERAL", "text_font", TEXTFONT);
-	theme.txtFontColor = m_theme.getColor("GENERAL", "text_font_color", 0xFFFFFFFF);
+	theme.txtFont = _font(GENERAL_DOMAIN, "text_font", TEXTFONT);
+	theme.txtFontColor = m_theme.getColor(GENERAL_DOMAIN, "text_font_color", 0xFFFFFFFF);
 
 	// Default Sounds
-	theme.clickSound	= _sound(theme.soundSet, m_theme.getString("GENERAL", "click_sound", "").c_str(), click_wav, click_wav_size, "default_btn_click", false);
-	theme.hoverSound	= _sound(theme.soundSet, m_theme.getString("GENERAL", "hover_sound", "").c_str(), hover_wav, hover_wav_size, "default_btn_hover", false);
-	theme.cameraSound	= _sound(theme.soundSet, m_theme.getString("GENERAL", "camera_sound", "").c_str(), camera_wav, camera_wav_size, "default_camera", false);
+	theme.clickSound	= _sound(theme.soundSet, m_theme.getString(GENERAL_DOMAIN, "click_sound", "").c_str(), click_wav, click_wav_size, "default_btn_click", false);
+	theme.hoverSound	= _sound(theme.soundSet, m_theme.getString(GENERAL_DOMAIN, "hover_sound", "").c_str(), hover_wav, hover_wav_size, "default_btn_hover", false);
+	theme.cameraSound	= _sound(theme.soundSet, m_theme.getString(GENERAL_DOMAIN, "camera_sound", "").c_str(), camera_wav, camera_wav_size, "default_camera", false);
 
 	// Default textures
 	TexHandle.fromImageFile(theme.btnTexL, fmt("%s/butleft.png", m_imgsDir.c_str()));
-	theme.btnTexL = _texture("GENERAL", "button_texture_left", theme.btnTexL); 
+	theme.btnTexL = _texture(GENERAL_DOMAIN, "button_texture_left", theme.btnTexL); 
 	TexHandle.fromImageFile(theme.btnTexR, fmt("%s/butright.png", m_imgsDir.c_str()));
-	theme.btnTexR = _texture("GENERAL", "button_texture_right", theme.btnTexR); 
+	theme.btnTexR = _texture(GENERAL_DOMAIN, "button_texture_right", theme.btnTexR); 
 	TexHandle.fromImageFile(theme.btnTexC, fmt("%s/butcenter.png", m_imgsDir.c_str()));
-	theme.btnTexC = _texture("GENERAL", "button_texture_center", theme.btnTexC); 
+	theme.btnTexC = _texture(GENERAL_DOMAIN, "button_texture_center", theme.btnTexC); 
 	TexHandle.fromImageFile(theme.btnTexLS, fmt("%s/butsleft.png", m_imgsDir.c_str()));
-	theme.btnTexLS = _texture("GENERAL", "button_texture_left_selected", theme.btnTexLS); 
+	theme.btnTexLS = _texture(GENERAL_DOMAIN, "button_texture_left_selected", theme.btnTexLS); 
 	TexHandle.fromImageFile(theme.btnTexRS, fmt("%s/butsright.png", m_imgsDir.c_str()));
-	theme.btnTexRS = _texture("GENERAL", "button_texture_right_selected", theme.btnTexRS); 
+	theme.btnTexRS = _texture(GENERAL_DOMAIN, "button_texture_right_selected", theme.btnTexRS); 
 	TexHandle.fromImageFile(theme.btnTexCS, fmt("%s/butscenter.png", m_imgsDir.c_str()));
-	theme.btnTexCS = _texture("GENERAL", "button_texture_center_selected", theme.btnTexCS); 
+	theme.btnTexCS = _texture(GENERAL_DOMAIN, "button_texture_center_selected", theme.btnTexCS); 
 
 	/* Language Buttons */
 	u32 img_buf_size = 0;
@@ -990,8 +990,8 @@ void CMenu::_buildMenus(void)
 		TexHandle.fromPNG(theme.btnAUOff, img_buf, GX_TF_RGBA8, 0, 0, true);
 		MEM2_free(img_buf);
 	}
-	theme.btnAUOn = _texture("GENERAL", "button_au_on", theme.btnAUOn);
-	theme.btnAUOff = _texture("GENERAL", "button_au_off", theme.btnAUOff);
+	theme.btnAUOn = _texture(GENERAL_DOMAIN, "button_au_on", theme.btnAUOn);
+	theme.btnAUOff = _texture(GENERAL_DOMAIN, "button_au_off", theme.btnAUOff);
 
 	img_buf = fsop_ReadFile(fmt("%s/butauons.png", m_imgsDir.c_str()), &img_buf_size);
 	if(img_buf !=  NULL)
@@ -1000,8 +1000,8 @@ void CMenu::_buildMenus(void)
 		TexHandle.fromPNG(theme.btnAUOffs, img_buf, GX_TF_RGBA8, 0, 0, true);
 		MEM2_free(img_buf);
 	}
-	theme.btnAUOns = _texture("GENERAL", "button_au_on_selected", theme.btnAUOns);
-	theme.btnAUOffs = _texture("GENERAL", "button_au_off_selected", theme.btnAUOffs);
+	theme.btnAUOns = _texture(GENERAL_DOMAIN, "button_au_on_selected", theme.btnAUOns);
+	theme.btnAUOffs = _texture(GENERAL_DOMAIN, "button_au_off_selected", theme.btnAUOffs);
 
 	img_buf = fsop_ReadFile(fmt("%s/butenon.png", m_imgsDir.c_str()), &img_buf_size);
 	if(img_buf !=  NULL)
@@ -1010,8 +1010,8 @@ void CMenu::_buildMenus(void)
 		TexHandle.fromPNG(theme.btnENOff, img_buf, GX_TF_RGBA8, 0, 0, true);
 		MEM2_free(img_buf);
 	}
-	theme.btnENOn = _texture("GENERAL", "button_en_on", theme.btnENOn);
-	theme.btnENOff = _texture("GENERAL", "button_en_off", theme.btnENOff);
+	theme.btnENOn = _texture(GENERAL_DOMAIN, "button_en_on", theme.btnENOn);
+	theme.btnENOff = _texture(GENERAL_DOMAIN, "button_en_off", theme.btnENOff);
 
 	img_buf = fsop_ReadFile(fmt("%s/butenons.png", m_imgsDir.c_str()), &img_buf_size);
 	if(img_buf !=  NULL)
@@ -1020,8 +1020,8 @@ void CMenu::_buildMenus(void)
 		TexHandle.fromPNG(theme.btnENOffs, img_buf, GX_TF_RGBA8, 0, 0, true);
 		MEM2_free(img_buf);
 	}
-	theme.btnENOns = _texture("GENERAL", "button_en_on_selected", theme.btnENOns);
-	theme.btnENOffs = _texture("GENERAL", "button_en_off_selected", theme.btnENOffs);
+	theme.btnENOns = _texture(GENERAL_DOMAIN, "button_en_on_selected", theme.btnENOns);
+	theme.btnENOffs = _texture(GENERAL_DOMAIN, "button_en_off_selected", theme.btnENOffs);
 
 	img_buf = fsop_ReadFile(fmt("%s/butjaon.png", m_imgsDir.c_str()), &img_buf_size);
 	if(img_buf !=  NULL)
@@ -1030,8 +1030,8 @@ void CMenu::_buildMenus(void)
 		TexHandle.fromPNG(theme.btnJAOff, img_buf, GX_TF_RGBA8, 0, 0, true);
 		MEM2_free(img_buf);
 	}
-	theme.btnJAOn = _texture("GENERAL", "button_ja_on", theme.btnJAOn);
-	theme.btnJAOff = _texture("GENERAL", "button_ja_off", theme.btnJAOff);
+	theme.btnJAOn = _texture(GENERAL_DOMAIN, "button_ja_on", theme.btnJAOn);
+	theme.btnJAOff = _texture(GENERAL_DOMAIN, "button_ja_off", theme.btnJAOff);
 
 	img_buf = fsop_ReadFile(fmt("%s/butjaons.png", m_imgsDir.c_str()), &img_buf_size);
 	if(img_buf !=  NULL)
@@ -1040,8 +1040,8 @@ void CMenu::_buildMenus(void)
 		TexHandle.fromPNG(theme.btnJAOffs, img_buf, GX_TF_RGBA8, 0, 0, true);
 		MEM2_free(img_buf);
 	}
-	theme.btnJAOns = _texture("GENERAL", "button_ja_on_selected", theme.btnJAOns);
-	theme.btnJAOffs = _texture("GENERAL", "button_ja_off_selected", theme.btnJAOffs);
+	theme.btnJAOns = _texture(GENERAL_DOMAIN, "button_ja_on_selected", theme.btnJAOns);
+	theme.btnJAOffs = _texture(GENERAL_DOMAIN, "button_ja_off_selected", theme.btnJAOffs);
 
 	img_buf = fsop_ReadFile(fmt("%s/butfron.png", m_imgsDir.c_str()), &img_buf_size);
 	if(img_buf !=  NULL)
@@ -1050,8 +1050,8 @@ void CMenu::_buildMenus(void)
 		TexHandle.fromPNG(theme.btnFROff, img_buf, GX_TF_RGBA8, 0, 0, true);
 		MEM2_free(img_buf);
 	}
-	theme.btnFROn = _texture("GENERAL", "button_fr_on", theme.btnFROn);
-	theme.btnFROff = _texture("GENERAL", "button_fr_off", theme.btnFROff);
+	theme.btnFROn = _texture(GENERAL_DOMAIN, "button_fr_on", theme.btnFROn);
+	theme.btnFROff = _texture(GENERAL_DOMAIN, "button_fr_off", theme.btnFROff);
 
 	img_buf = fsop_ReadFile(fmt("%s/butfrons.png", m_imgsDir.c_str()), &img_buf_size);
 	if(img_buf !=  NULL)
@@ -1060,8 +1060,8 @@ void CMenu::_buildMenus(void)
 		TexHandle.fromPNG(theme.btnFROffs, img_buf, GX_TF_RGBA8, 0, 0, true);
 		MEM2_free(img_buf);
 	}
-	theme.btnFROns = _texture("GENERAL", "button_fr_on_selected", theme.btnFROns);
-	theme.btnFROffs = _texture("GENERAL", "button_fr_off_selected", theme.btnFROffs);
+	theme.btnFROns = _texture(GENERAL_DOMAIN, "button_fr_on_selected", theme.btnFROns);
+	theme.btnFROffs = _texture(GENERAL_DOMAIN, "button_fr_off_selected", theme.btnFROffs);
 
 	img_buf = fsop_ReadFile(fmt("%s/butdeon.png", m_imgsDir.c_str()), &img_buf_size);
 	if(img_buf !=  NULL)
@@ -1070,8 +1070,8 @@ void CMenu::_buildMenus(void)
 		TexHandle.fromPNG(theme.btnDEOff, img_buf, GX_TF_RGBA8, 0, 0, true);
 		MEM2_free(img_buf);
 	}
-	theme.btnDEOn = _texture("GENERAL", "button_de_on", theme.btnDEOn);
-	theme.btnDEOff = _texture("GENERAL", "button_de_off", theme.btnDEOff);
+	theme.btnDEOn = _texture(GENERAL_DOMAIN, "button_de_on", theme.btnDEOn);
+	theme.btnDEOff = _texture(GENERAL_DOMAIN, "button_de_off", theme.btnDEOff);
 
 	img_buf = fsop_ReadFile(fmt("%s/butdeons.png", m_imgsDir.c_str()), &img_buf_size);
 	if(img_buf !=  NULL)
@@ -1080,8 +1080,8 @@ void CMenu::_buildMenus(void)
 		TexHandle.fromPNG(theme.btnDEOffs, img_buf, GX_TF_RGBA8, 0, 0, true);
 		MEM2_free(img_buf);
 	}
-	theme.btnDEOns = _texture("GENERAL", "button_de_on_selected", theme.btnDEOns);
-	theme.btnDEOffs = _texture("GENERAL", "button_de_off_selected", theme.btnDEOffs);
+	theme.btnDEOns = _texture(GENERAL_DOMAIN, "button_de_on_selected", theme.btnDEOns);
+	theme.btnDEOffs = _texture(GENERAL_DOMAIN, "button_de_off_selected", theme.btnDEOffs);
 
 	img_buf = fsop_ReadFile(fmt("%s/buteson.png", m_imgsDir.c_str()), &img_buf_size);
 	if(img_buf !=  NULL)
@@ -1090,8 +1090,8 @@ void CMenu::_buildMenus(void)
 		TexHandle.fromPNG(theme.btnESOff, img_buf, GX_TF_RGBA8, 0, 0, true);
 		MEM2_free(img_buf);
 	}
-	theme.btnESOn = _texture("GENERAL", "button_es_on", theme.btnESOn);
-	theme.btnESOff = _texture("GENERAL", "button_es_off", theme.btnESOff);
+	theme.btnESOn = _texture(GENERAL_DOMAIN, "button_es_on", theme.btnESOn);
+	theme.btnESOff = _texture(GENERAL_DOMAIN, "button_es_off", theme.btnESOff);
 
 	img_buf = fsop_ReadFile(fmt("%s/butesons.png", m_imgsDir.c_str()), &img_buf_size);
 	if(img_buf !=  NULL)
@@ -1100,8 +1100,8 @@ void CMenu::_buildMenus(void)
 		TexHandle.fromPNG(theme.btnESOffs, img_buf, GX_TF_RGBA8, 0, 0, true);
 		MEM2_free(img_buf);
 	}
-	theme.btnESOns = _texture("GENERAL", "button_es_on_selected", theme.btnESOns);
-	theme.btnESOffs = _texture("GENERAL", "button_es_off_selected", theme.btnESOffs);
+	theme.btnESOns = _texture(GENERAL_DOMAIN, "button_es_on_selected", theme.btnESOns);
+	theme.btnESOffs = _texture(GENERAL_DOMAIN, "button_es_off_selected", theme.btnESOffs);
 
 	img_buf = fsop_ReadFile(fmt("%s/butiton.png", m_imgsDir.c_str()), &img_buf_size);
 	if(img_buf !=  NULL)
@@ -1110,8 +1110,8 @@ void CMenu::_buildMenus(void)
 		TexHandle.fromPNG(theme.btnITOff, img_buf, GX_TF_RGBA8, 0, 0, true);
 		MEM2_free(img_buf);
 	}
-	theme.btnITOn = _texture("GENERAL", "button_it_on", theme.btnITOn);
-	theme.btnITOff = _texture("GENERAL", "button_it_off", theme.btnITOff);
+	theme.btnITOn = _texture(GENERAL_DOMAIN, "button_it_on", theme.btnITOn);
+	theme.btnITOff = _texture(GENERAL_DOMAIN, "button_it_off", theme.btnITOff);
 
 	img_buf = fsop_ReadFile(fmt("%s/butitons.png", m_imgsDir.c_str()), &img_buf_size);
 	if(img_buf !=  NULL)
@@ -1120,8 +1120,8 @@ void CMenu::_buildMenus(void)
 		TexHandle.fromPNG(theme.btnITOffs, img_buf, GX_TF_RGBA8, 0, 0, true);
 		MEM2_free(img_buf);
 	}
-	theme.btnITOns = _texture("GENERAL", "button_it_on_selected", theme.btnITOns);
-	theme.btnITOffs = _texture("GENERAL", "button_it_off_selected", theme.btnITOffs);
+	theme.btnITOns = _texture(GENERAL_DOMAIN, "button_it_on_selected", theme.btnITOns);
+	theme.btnITOffs = _texture(GENERAL_DOMAIN, "button_it_off_selected", theme.btnITOffs);
 
 	img_buf = fsop_ReadFile(fmt("%s/butnlon.png", m_imgsDir.c_str()), &img_buf_size);
 	if(img_buf !=  NULL)
@@ -1130,8 +1130,8 @@ void CMenu::_buildMenus(void)
 		TexHandle.fromPNG(theme.btnNLOff, img_buf, GX_TF_RGBA8, 0, 0, true);
 		MEM2_free(img_buf);
 	}
-	theme.btnNLOn = _texture("GENERAL", "button_nl_on", theme.btnNLOn);
-	theme.btnNLOff = _texture("GENERAL", "button_nl_off", theme.btnNLOff);
+	theme.btnNLOn = _texture(GENERAL_DOMAIN, "button_nl_on", theme.btnNLOn);
+	theme.btnNLOff = _texture(GENERAL_DOMAIN, "button_nl_off", theme.btnNLOff);
 
 	img_buf = fsop_ReadFile(fmt("%s/butnlons.png", m_imgsDir.c_str()), &img_buf_size);
 	if(img_buf !=  NULL)
@@ -1140,8 +1140,8 @@ void CMenu::_buildMenus(void)
 		TexHandle.fromPNG(theme.btnNLOffs, img_buf, GX_TF_RGBA8, 0, 0, true);
 		MEM2_free(img_buf);
 	}
-	theme.btnNLOns = _texture("GENERAL", "button_nl_on_selected", theme.btnNLOns);
-	theme.btnNLOffs = _texture("GENERAL", "button_nl_off_selected", theme.btnNLOffs);
+	theme.btnNLOns = _texture(GENERAL_DOMAIN, "button_nl_on_selected", theme.btnNLOns);
+	theme.btnNLOffs = _texture(GENERAL_DOMAIN, "button_nl_off_selected", theme.btnNLOffs);
 
 	img_buf = fsop_ReadFile(fmt("%s/butpton.png", m_imgsDir.c_str()), &img_buf_size);
 	if(img_buf !=  NULL)
@@ -1150,8 +1150,8 @@ void CMenu::_buildMenus(void)
 		TexHandle.fromPNG(theme.btnPTOff, img_buf, GX_TF_RGBA8, 0, 0, true);
 		MEM2_free(img_buf);
 	}
-	theme.btnPTOn = _texture("GENERAL", "button_pt_on", theme.btnPTOn);
-	theme.btnPTOff = _texture("GENERAL", "button_pt_off", theme.btnPTOff);
+	theme.btnPTOn = _texture(GENERAL_DOMAIN, "button_pt_on", theme.btnPTOn);
+	theme.btnPTOff = _texture(GENERAL_DOMAIN, "button_pt_off", theme.btnPTOff);
 
 	img_buf = fsop_ReadFile(fmt("%s/butptons.png", m_imgsDir.c_str()), &img_buf_size);
 	if(img_buf !=  NULL)
@@ -1160,8 +1160,8 @@ void CMenu::_buildMenus(void)
 		TexHandle.fromPNG(theme.btnPTOffs, img_buf, GX_TF_RGBA8, 0, 0, true);
 		MEM2_free(img_buf);
 	}
-	theme.btnPTOns = _texture("GENERAL", "button_pt_on_selected", theme.btnPTOns);
-	theme.btnPTOffs = _texture("GENERAL", "button_pt_off_selected", theme.btnPTOffs);
+	theme.btnPTOns = _texture(GENERAL_DOMAIN, "button_pt_on_selected", theme.btnPTOns);
+	theme.btnPTOffs = _texture(GENERAL_DOMAIN, "button_pt_off_selected", theme.btnPTOffs);
 
 	img_buf = fsop_ReadFile(fmt("%s/butruon.png", m_imgsDir.c_str()), &img_buf_size);
 	if(img_buf !=  NULL)
@@ -1170,8 +1170,8 @@ void CMenu::_buildMenus(void)
 		TexHandle.fromPNG(theme.btnRUOff, img_buf, GX_TF_RGBA8, 0, 0, true);
 		MEM2_free(img_buf);
 	}
-	theme.btnRUOn = _texture("GENERAL", "button_ru_on", theme.btnRUOn);
-	theme.btnRUOff = _texture("GENERAL", "button_ru_off", theme.btnRUOff);
+	theme.btnRUOn = _texture(GENERAL_DOMAIN, "button_ru_on", theme.btnRUOn);
+	theme.btnRUOff = _texture(GENERAL_DOMAIN, "button_ru_off", theme.btnRUOff);
 
 	img_buf = fsop_ReadFile(fmt("%s/butruons.png", m_imgsDir.c_str()), &img_buf_size);
 	if(img_buf !=  NULL)
@@ -1180,8 +1180,8 @@ void CMenu::_buildMenus(void)
 		TexHandle.fromPNG(theme.btnRUOffs, img_buf, GX_TF_RGBA8, 0, 0, true);
 		MEM2_free(img_buf);
 	}
-	theme.btnRUOns = _texture("GENERAL", "button_ru_on_selected", theme.btnRUOns);
-	theme.btnRUOffs = _texture("GENERAL", "button_ru_off_selected", theme.btnRUOffs);
+	theme.btnRUOns = _texture(GENERAL_DOMAIN, "button_ru_on_selected", theme.btnRUOns);
+	theme.btnRUOffs = _texture(GENERAL_DOMAIN, "button_ru_off_selected", theme.btnRUOffs);
 
 	img_buf = fsop_ReadFile(fmt("%s/butkoon.png", m_imgsDir.c_str()), &img_buf_size);
 	if(img_buf !=  NULL)
@@ -1190,8 +1190,8 @@ void CMenu::_buildMenus(void)
 		TexHandle.fromPNG(theme.btnKOOff, img_buf, GX_TF_RGBA8, 0, 0, true);
 		MEM2_free(img_buf);
 	}
-	theme.btnKOOn = _texture("GENERAL", "button_ko_on", theme.btnKOOn);
-	theme.btnKOOff = _texture("GENERAL", "button_ko_off", theme.btnKOOff);
+	theme.btnKOOn = _texture(GENERAL_DOMAIN, "button_ko_on", theme.btnKOOn);
+	theme.btnKOOff = _texture(GENERAL_DOMAIN, "button_ko_off", theme.btnKOOff);
 
 	img_buf = fsop_ReadFile(fmt("%s/butkoons.png", m_imgsDir.c_str()), &img_buf_size);
 	if(img_buf !=  NULL)
@@ -1200,8 +1200,8 @@ void CMenu::_buildMenus(void)
 		TexHandle.fromPNG(theme.btnKOOffs, img_buf, GX_TF_RGBA8, 0, 0, true);
 		MEM2_free(img_buf);
 	}
-	theme.btnKOOns = _texture("GENERAL", "button_ko_on_selected", theme.btnKOOns);
-	theme.btnKOOffs = _texture("GENERAL", "button_ko_off_selected", theme.btnKOOffs);
+	theme.btnKOOns = _texture(GENERAL_DOMAIN, "button_ko_on_selected", theme.btnKOOns);
+	theme.btnKOOffs = _texture(GENERAL_DOMAIN, "button_ko_off_selected", theme.btnKOOffs);
 
 	img_buf = fsop_ReadFile(fmt("%s/butzhcnon.png", m_imgsDir.c_str()), &img_buf_size);
 	if(img_buf !=  NULL)
@@ -1210,8 +1210,8 @@ void CMenu::_buildMenus(void)
 		TexHandle.fromPNG(theme.btnZHCNOff, img_buf, GX_TF_RGBA8, 0, 0, true);
 		MEM2_free(img_buf);
 	}
-	theme.btnZHCNOn = _texture("GENERAL", "button_zhcn_on", theme.btnZHCNOn);
-	theme.btnZHCNOff = _texture("GENERAL", "button_zhcn_off", theme.btnZHCNOff);
+	theme.btnZHCNOn = _texture(GENERAL_DOMAIN, "button_zhcn_on", theme.btnZHCNOn);
+	theme.btnZHCNOff = _texture(GENERAL_DOMAIN, "button_zhcn_off", theme.btnZHCNOff);
 
 	img_buf = fsop_ReadFile(fmt("%s/butzhcnons.png", m_imgsDir.c_str()), &img_buf_size);
 	if(img_buf !=  NULL)
@@ -1220,47 +1220,47 @@ void CMenu::_buildMenus(void)
 		TexHandle.fromPNG(theme.btnZHCNOffs, img_buf, GX_TF_RGBA8, 0, 0, true);
 		MEM2_free(img_buf);
 	}
-	theme.btnZHCNOns = _texture("GENERAL", "button_zhcn_on_selected", theme.btnZHCNOns);
-	theme.btnZHCNOffs = _texture("GENERAL", "button_zhcn_off_selected", theme.btnZHCNOffs);
+	theme.btnZHCNOns = _texture(GENERAL_DOMAIN, "button_zhcn_on_selected", theme.btnZHCNOns);
+	theme.btnZHCNOffs = _texture(GENERAL_DOMAIN, "button_zhcn_off_selected", theme.btnZHCNOffs);
 
 	/* Default textures */
 	TexHandle.fromImageFile(theme.checkboxoff, fmt("%s/checkbox.png", m_imgsDir.c_str()));
-	theme.checkboxoff = _texture("GENERAL", "checkbox_off", theme.checkboxoff);
+	theme.checkboxoff = _texture(GENERAL_DOMAIN, "checkbox_off", theme.checkboxoff);
 	TexHandle.fromImageFile(theme.checkboxoffs, fmt("%s/checkbox.png", m_imgsDir.c_str()));
-	theme.checkboxoffs = _texture("GENERAL", "checkbox_off_selected", theme.checkboxoffs);
+	theme.checkboxoffs = _texture(GENERAL_DOMAIN, "checkbox_off_selected", theme.checkboxoffs);
 	TexHandle.fromImageFile(theme.checkboxon, fmt("%s/checkboxs.png", m_imgsDir.c_str()));
-	theme.checkboxon = _texture("GENERAL", "checkbox_on", theme.checkboxon);
+	theme.checkboxon = _texture(GENERAL_DOMAIN, "checkbox_on", theme.checkboxon);
 	TexHandle.fromImageFile(theme.checkboxons, fmt("%s/checkboxs.png", m_imgsDir.c_str()));
-	theme.checkboxons = _texture("GENERAL", "checkbox_on_selected", theme.checkboxons);
+	theme.checkboxons = _texture(GENERAL_DOMAIN, "checkbox_on_selected", theme.checkboxons);
 	TexHandle.fromImageFile(theme.checkboxHid, fmt("%s/checkboxhid.png", m_imgsDir.c_str()));
-	theme.checkboxHid = _texture("GENERAL", "checkbox_Hid", theme.checkboxHid);
+	theme.checkboxHid = _texture(GENERAL_DOMAIN, "checkbox_Hid", theme.checkboxHid);
 	TexHandle.fromImageFile(theme.checkboxHids, fmt("%s/checkboxhid.png", m_imgsDir.c_str()));
-	theme.checkboxHids = _texture("GENERAL", "checkbox_Hid_selected", theme.checkboxHids);
+	theme.checkboxHids = _texture(GENERAL_DOMAIN, "checkbox_Hid_selected", theme.checkboxHids);
 	TexHandle.fromImageFile(theme.checkboxReq, fmt("%s/checkboxreq.png", m_imgsDir.c_str()));
-	theme.checkboxReq = _texture("GENERAL", "checkbox_Req", theme.checkboxReq);
+	theme.checkboxReq = _texture(GENERAL_DOMAIN, "checkbox_Req", theme.checkboxReq);
 	TexHandle.fromImageFile(theme.checkboxReqs, fmt("%s/checkboxreq.png", m_imgsDir.c_str()));
-	theme.checkboxReqs = _texture("GENERAL", "checkbox_Req_selected", theme.checkboxReqs);
+	theme.checkboxReqs = _texture(GENERAL_DOMAIN, "checkbox_Req_selected", theme.checkboxReqs);
 
 	TexHandle.fromImageFile(theme.pbarTexL, fmt("%s/pbarleft.png", m_imgsDir.c_str()));
-	theme.pbarTexL = _texture("GENERAL", "progressbar_texture_left", theme.pbarTexL);
+	theme.pbarTexL = _texture(GENERAL_DOMAIN, "progressbar_texture_left", theme.pbarTexL);
 	TexHandle.fromImageFile(theme.pbarTexR, fmt("%s/pbarright.png", m_imgsDir.c_str()));
-	theme.pbarTexR = _texture("GENERAL", "progressbar_texture_right", theme.pbarTexR);
+	theme.pbarTexR = _texture(GENERAL_DOMAIN, "progressbar_texture_right", theme.pbarTexR);
 	TexHandle.fromImageFile(theme.pbarTexC, fmt("%s/pbarcenter.png", m_imgsDir.c_str()));
-	theme.pbarTexC = _texture("GENERAL", "progressbar_texture_center", theme.pbarTexC);
+	theme.pbarTexC = _texture(GENERAL_DOMAIN, "progressbar_texture_center", theme.pbarTexC);
 	TexHandle.fromImageFile(theme.pbarTexLS, fmt("%s/pbarlefts.png", m_imgsDir.c_str()));
-	theme.pbarTexLS = _texture("GENERAL", "progressbar_texture_left_selected", theme.pbarTexLS);
+	theme.pbarTexLS = _texture(GENERAL_DOMAIN, "progressbar_texture_left_selected", theme.pbarTexLS);
 	TexHandle.fromImageFile(theme.pbarTexRS, fmt("%s/pbarrights.png", m_imgsDir.c_str()));
-	theme.pbarTexRS = _texture("GENERAL", "progressbar_texture_right_selected", theme.pbarTexRS);
+	theme.pbarTexRS = _texture(GENERAL_DOMAIN, "progressbar_texture_right_selected", theme.pbarTexRS);
 	TexHandle.fromImageFile(theme.pbarTexCS, fmt("%s/pbarcenters.png", m_imgsDir.c_str()));
-	theme.pbarTexCS = _texture("GENERAL", "progressbar_texture_center_selected", theme.pbarTexCS);
+	theme.pbarTexCS = _texture(GENERAL_DOMAIN, "progressbar_texture_center_selected", theme.pbarTexCS);
 	TexHandle.fromImageFile(theme.btnTexPlus, fmt("%s/btnplus.png", m_imgsDir.c_str()));
-	theme.btnTexPlus = _texture("GENERAL", "plus_button_texture", theme.btnTexPlus);
+	theme.btnTexPlus = _texture(GENERAL_DOMAIN, "plus_button_texture", theme.btnTexPlus);
 	TexHandle.fromImageFile(theme.btnTexPlusS, fmt("%s/btnpluss.png", m_imgsDir.c_str()));
-	theme.btnTexPlusS = _texture("GENERAL", "plus_button_texture_selected", theme.btnTexPlusS);
+	theme.btnTexPlusS = _texture(GENERAL_DOMAIN, "plus_button_texture_selected", theme.btnTexPlusS);
 	TexHandle.fromImageFile(theme.btnTexMinus, fmt("%s/btnminus.png", m_imgsDir.c_str()));
-	theme.btnTexMinus = _texture("GENERAL", "minus_button_texture", theme.btnTexMinus);
+	theme.btnTexMinus = _texture(GENERAL_DOMAIN, "minus_button_texture", theme.btnTexMinus);
 	TexHandle.fromImageFile(theme.btnTexMinusS, fmt("%s/btnminuss.png", m_imgsDir.c_str()));
-	theme.btnTexMinusS = _texture("GENERAL", "minus_button_texture_selected", theme.btnTexMinusS);
+	theme.btnTexMinusS = _texture(GENERAL_DOMAIN, "minus_button_texture_selected", theme.btnTexMinusS);
 
 	// Default background
 	TexHandle.fromImageFile(theme.bg, fmt("%s/background.jpg", m_imgsDir.c_str()));
@@ -1316,13 +1316,13 @@ typedef struct
 SFont CMenu::_font(const char *domain, const char *key, u32 fontSize, u32 lineSpacing, u32 weight, u32 index, const char *genKey)
 {
 	string filename;
-	bool general = strncmp(domain, "GENERAL", 7) == 0;
+	bool general = strncmp(domain, GENERAL_DOMAIN, 7) == 0;
 	FontHolder fonts[3] = {{ "_size", 6u, 300u, fontSize, 0 }, { "_line_height", 6u, 300u, lineSpacing, 0 }, { "_weight", 1u, 32u, weight, 0 }};
 
 	if(!general)
 		filename = m_theme.getString(domain, key);
 	if(filename.empty())
-		filename = m_theme.getString("GENERAL", genKey, genKey);
+		filename = m_theme.getString(GENERAL_DOMAIN, genKey, genKey);
 	bool useDefault = filename == genKey;
 
 	for(u32 i = 0; i < 3; i++)
@@ -1335,7 +1335,7 @@ SFont CMenu::_font(const char *domain, const char *key, u32 fontSize, u32 lineSp
 		if(!general)
 			fonts[i].res = (u32)m_theme.getInt(domain, value);
 		if(fonts[i].res <= 0)
-			fonts[i].res = (u32)m_theme.getInt("GENERAL", defValue);
+			fonts[i].res = (u32)m_theme.getInt(GENERAL_DOMAIN, defValue);
 
 		fonts[i].res = min(max(fonts[i].min, fonts[i].res <= 0 ? fonts[i].def : fonts[i].res), fonts[i].max);
 	}
@@ -1724,8 +1724,8 @@ void CMenu::_mainLoopCommon(bool withCF, bool adjusting)
 	// check if we need to start screensaver 
 	if(!m_vid.showingWaitMessage())
 	{
-		if(!m_cfg.getBool("GENERAL", "screensaver_disabled", true))
-			m_vid.screensaver(NoInputTime(), m_cfg.getInt("GENERAL", "screensaver_idle_seconds", 60));
+		if(!m_cfg.getBool(GENERAL_DOMAIN, "screensaver_disabled", true))
+			m_vid.screensaver(NoInputTime(), m_cfg.getInt(GENERAL_DOMAIN, "screensaver_idle_seconds", 60));
 		m_vid.render();
 	}
 	// check if power button is pressed and exit wiiflow
@@ -1970,7 +1970,7 @@ const wstringEx CMenu::_fmt(const char *key, const wchar_t *def)
 void CMenu::_initCF(void)
 {
 	Config dump;
-	bool dumpGameLst = m_cfg.getBool("GENERAL", "dump_list", true);
+	bool dumpGameLst = m_cfg.getBool(GENERAL_DOMAIN, "dump_list", true);
 	if(dumpGameLst) dump.load(fmt("%s/" TITLES_DUMP_FILENAME, m_settingsDir.c_str()));
 
 	CoverFlow.clear();
@@ -2030,24 +2030,24 @@ void CMenu::_initCF(void)
 			switch(hdr->type)
 			{
 				case TYPE_CHANNEL:
-					catDomain = "NAND";
+					catDomain = NAND_DOMAIN;
 					break;
 				case TYPE_EMUCHANNEL:
-					catDomain = "CHANNELS";
+					catDomain = CHANNELS_DOMAIN;
 					break;
 				case TYPE_GC_GAME:
-					catDomain = "GAMECUBE";
+					catDomain = GAMECUBE_DOMAIN;
 					break;
 				case TYPE_WII_GAME:
-					catDomain = "WII";
+					catDomain = WII_DOMAIN;
 					break;
 				default:
 					catDomain = m_plugin.PluginMagicWord;
 					break;
 			}
-			const char *requiredCats = m_cat.getString("GENERAL", "required_categories").c_str();
-			const char *selectedCats = m_cat.getString("GENERAL", "selected_categories").c_str();
-			const char *hiddenCats = m_cat.getString("GENERAL", "hidden_categories").c_str();
+			const char *requiredCats = m_cat.getString(GENERAL_DOMAIN, "required_categories").c_str();
+			const char *selectedCats = m_cat.getString(GENERAL_DOMAIN, "selected_categories").c_str();
+			const char *hiddenCats = m_cat.getString(GENERAL_DOMAIN, "hidden_categories").c_str();
 			u8 numReqCats = strlen(requiredCats);
 			u8 numSelCats = strlen(selectedCats);
 			u8 numHidCats = strlen(hiddenCats);
@@ -2123,16 +2123,16 @@ void CMenu::_initCF(void)
 				switch(hdr->type)
 				{
 					case TYPE_CHANNEL:
-						domain = "NAND";
+						domain = NAND_DOMAIN;
 						break;
 					case TYPE_EMUCHANNEL:
-						domain = "CHANNELS";
+						domain = CHANNELS_DOMAIN;
 						break;
 					case TYPE_GC_GAME:
-						domain = "GAMECUBE";
+						domain = GAMECUBE_DOMAIN;
 						break;
 					default:
-						domain = "WII";
+						domain = WII_DOMAIN;
 						break;
 				}
 				dump.setWString(domain, id, hdr->title);
@@ -2152,7 +2152,7 @@ void CMenu::_initCF(void)
 	if(dumpGameLst)
 	{
 		dump.save(true);
-		m_cfg.setBool("GENERAL", "dump_list", false);
+		m_cfg.setBool(GENERAL_DOMAIN, "dump_list", false);
 	}
 
 	CoverFlow.setSorting(m_source_cnt > 1 ? (Sorting)0 : (Sorting)m_cfg.getInt(_domainFromView(), "sort", 0));
@@ -2168,12 +2168,12 @@ void CMenu::_initCF(void)
 	}
 	else
 	{
-		CoverFlow.setBoxMode(m_cfg.getBool("GENERAL", "box_mode", true));
+		CoverFlow.setBoxMode(m_cfg.getBool(GENERAL_DOMAIN, "box_mode", true));
 		CoverFlow.setSmallBoxMode(false);
 	}
-	CoverFlow.setCompression(m_cfg.getBool("GENERAL", "allow_texture_compression", true));
-	CoverFlow.setBufferSize(m_cfg.getInt("GENERAL", "cover_buffer", 20));
-	CoverFlow.setHQcover(m_cfg.getBool("GENERAL", "cover_use_hq", true));
+	CoverFlow.setCompression(m_cfg.getBool(GENERAL_DOMAIN, "allow_texture_compression", true));
+	CoverFlow.setBufferSize(m_cfg.getInt(GENERAL_DOMAIN, "cover_buffer", 20));
+	CoverFlow.setHQcover(m_cfg.getBool(GENERAL_DOMAIN, "cover_use_hq", true));
 	CoverFlow.start(m_imgsDir);
 	
 	if(!CoverFlow.empty())
@@ -2262,15 +2262,15 @@ bool CMenu::_loadHomebrewList()
 
 bool CMenu::_loadGamecubeList()
 {
-	currentPartition = m_cfg.getInt(GC_DOMAIN, "partition", USB1);
+	currentPartition = m_cfg.getInt(GAMECUBE_DOMAIN, "partition", USB1);
 	if(!DeviceHandle.IsInserted(currentPartition))
 		return false;
 
 	string gameDir(fmt(gc_games_dir, DeviceName[currentPartition]));
 	string cacheDir(fmt("%s/%s_gamecube.db", m_listCacheDir.c_str(), DeviceName[currentPartition]));
-	bool updateCache = m_cfg.getBool(GC_DOMAIN, "update_cache");
+	bool updateCache = m_cfg.getBool(GAMECUBE_DOMAIN, "update_cache");
 	m_cacheList.CreateList(COVERFLOW_GAMECUBE, currentPartition, gameDir, stringToVector(".iso|.ciso|root", '|'), cacheDir, updateCache);
-	m_cfg.remove(GC_DOMAIN, "update_cache");
+	m_cfg.remove(GAMECUBE_DOMAIN, "update_cache");
 	for(vector<dir_discHdr>::iterator tmp_itr = m_cacheList.begin(); tmp_itr != m_cacheList.end(); tmp_itr++)
 		m_gameList.push_back(*tmp_itr);
 	return true;
@@ -2278,10 +2278,10 @@ bool CMenu::_loadGamecubeList()
 
 bool CMenu::_loadChannelList(void)
 {
-	u8 chantypes = m_cfg.getUInt(CHANNEL_DOMAIN, "channels_type", CHANNELS_REAL);
+	u8 chantypes = m_cfg.getUInt(CHANNELS_DOMAIN, "channels_type", CHANNELS_REAL);
 	if(chantypes < CHANNELS_REAL || chantypes > CHANNELS_BOTH)
 	{
-		m_cfg.setUInt(CHANNEL_DOMAIN, "channels_type", CHANNELS_REAL);
+		m_cfg.setUInt(CHANNELS_DOMAIN, "channels_type", CHANNELS_REAL);
 		chantypes = CHANNELS_REAL;
 	}
 	vector<string> NullVector;
@@ -2301,9 +2301,9 @@ bool CMenu::_loadChannelList(void)
 		{
 			currentPartition = emuPartition;
 			string cacheDir = fmt("%s/%s_channels.db", m_listCacheDir.c_str(), DeviceName[currentPartition]);
-			bool updateCache = m_cfg.getBool(CHANNEL_DOMAIN, "update_cache");
+			bool updateCache = m_cfg.getBool(CHANNELS_DOMAIN, "update_cache");
 			m_cacheList.CreateList(COVERFLOW_CHANNEL, currentPartition, std::string(), NullVector, cacheDir, updateCache);
-			m_cfg.remove(CHANNEL_DOMAIN, "update_cache");
+			m_cfg.remove(CHANNELS_DOMAIN, "update_cache");
 			for(vector<dir_discHdr>::iterator tmp_itr = m_cacheList.begin(); tmp_itr != m_cacheList.end(); tmp_itr++)
 				m_gameList.push_back(*tmp_itr);
 		}
@@ -2395,7 +2395,7 @@ bool CMenu::_loadPluginList()
 		
 	/*if(addChannel || addEmuChannel)
 	{
-		m_cfg.setUInt(CHANNEL_DOMAIN, "channels_type", addChannel | addEmuChannel);
+		m_cfg.setUInt(CHANNELS_DOMAIN, "channels_type", addChannel | addEmuChannel);
 		_loadChannelList();
 	}*/
 	m_cfg.remove(PLUGIN_DOMAIN, "update_cache");
@@ -2405,7 +2405,7 @@ bool CMenu::_loadPluginList()
 void CMenu::_stopSounds(void)
 {
 	// Fade out sounds
-	int fade_rate = m_cfg.getInt("GENERAL", "music_fade_rate", 8);
+	int fade_rate = m_cfg.getInt(GENERAL_DOMAIN, "music_fade_rate", 8);
 
 	if(!MusicPlayer.IsStopped())
 	{
@@ -2464,7 +2464,7 @@ void CMenu::_hideWaitMessage()
 
 void CMenu::_showWaitMessage()
 {
-	m_vid.waitMessage(_textures("GENERAL", "waitmessage"), m_theme.getFloat("GENERAL", "waitmessage_delay", 0.f));
+	m_vid.waitMessage(_textures(GENERAL_DOMAIN, "waitmessage"), m_theme.getFloat(GENERAL_DOMAIN, "waitmessage_delay", 0.f));
 }
 
 typedef struct map_entry
@@ -2562,11 +2562,11 @@ const char *CMenu::_domainFromView()
 	switch(m_current_view)
 	{
 		case COVERFLOW_CHANNEL:
-			return CHANNEL_DOMAIN;
+			return CHANNELS_DOMAIN;
 		case COVERFLOW_HOMEBREW:
 			return HOMEBREW_DOMAIN;
 		case COVERFLOW_GAMECUBE:
-			return GC_DOMAIN;
+			return GAMECUBE_DOMAIN;
 		case COVERFLOW_PLUGIN:
 			return PLUGIN_DOMAIN;
 		default:

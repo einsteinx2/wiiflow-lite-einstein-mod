@@ -126,7 +126,7 @@ void CMenu::_showCF(bool refreshList)
 					break;
 				case COVERFLOW_CHANNEL:
 					Msg = _t("main3", L"No titles found in ");
-					Pth = wstringEx(fmt("%s:/%s/%s", DeviceName[currentPartition],  emu_nands_dir, m_cfg.getString(CHANNEL_DOMAIN, "current_emunand").c_str()));
+					Pth = wstringEx(fmt("%s:/%s/%s", DeviceName[currentPartition],  emu_nands_dir, m_cfg.getString(CHANNELS_DOMAIN, "current_emunand").c_str()));
 					break;
 				case COVERFLOW_HOMEBREW:
 					Msg = _t("main4", L"No apps found in ");
@@ -152,13 +152,13 @@ void CMenu::_showCF(bool refreshList)
 	if(m_clearCats)// clear categories unless a source menu btn has selected one
 	{
 		// do not clear hidden categories to keep games hidden
-		m_cat.remove("GENERAL", "selected_categories");
-		m_cat.remove("GENERAL", "required_categories");
+		m_cat.remove(GENERAL_DOMAIN, "selected_categories");
+		m_cat.remove(GENERAL_DOMAIN, "required_categories");
 	}
 	m_clearCats = true;
 	
 	m_favorites = false;
-	if(m_cfg.getBool("GENERAL", "save_favorites_mode", false))
+	if(m_cfg.getBool(GENERAL_DOMAIN, "save_favorites_mode", false))
 		m_favorites = m_cfg.getBool(_domainFromView(), "favorites", false);
 	
 	cf_domain = "_COVERFLOW";
@@ -209,19 +209,19 @@ void CMenu::_showCF(bool refreshList)
 int CMenu::main(void)
 {
 	wstringEx curLetter;
-	const char *prevTheme = m_cfg.getString("GENERAL", "theme", "default").c_str();
-	bool show_channel = !m_cfg.getBool(CHANNEL_DOMAIN, "disable", false);
+	const char *prevTheme = m_cfg.getString(GENERAL_DOMAIN, "theme", "default").c_str();
+	bool show_channel = !m_cfg.getBool(CHANNELS_DOMAIN, "disable", false);
 	bool show_plugin = !m_cfg.getBool(PLUGIN_DOMAIN, "disable", false);
-	bool show_gamecube = !m_cfg.getBool(GC_DOMAIN, "disable", false);
-	m_multisource = m_cfg.getBool("GENERAL", "multisource", false);
-	bool m_source_on_start = m_cfg.getBool("GENERAL", "source_on_start", false);
+	bool show_gamecube = !m_cfg.getBool(GAMECUBE_DOMAIN, "disable", false);
+	m_multisource = m_cfg.getBool(GENERAL_DOMAIN, "multisource", false);
+	bool m_source_on_start = m_cfg.getBool(GENERAL_DOMAIN, "source_on_start", false);
 	bool bheld = false;
 	bool bUsed = false;
 	m_emuSaveNand = false;
 	m_reload = false;
 	u32 disc_check = 0;
 
-	m_current_view = m_cfg.getUInt("GENERAL", "sources", COVERFLOW_WII);
+	m_current_view = m_cfg.getUInt(GENERAL_DOMAIN, "sources", COVERFLOW_WII);
 	m_source_cnt = 0;
 	for(u8 i = 1; i < 16; i <<= 1)//not including coverflow_homebrew
 		if(m_current_view & i)
@@ -230,22 +230,22 @@ int CMenu::main(void)
 	if(m_source_cnt == 0 || m_current_view == COVERFLOW_HOMEBREW)
 	{
 		m_current_view = COVERFLOW_WII;
-		m_cfg.setUInt("GENERAL", "sources", m_current_view);
+		m_cfg.setUInt(GENERAL_DOMAIN, "sources", m_current_view);
 		m_source_cnt++;
 	}
 	
-	m_catStartPage = m_cfg.getInt("GENERAL", "cat_startpage", 1);
+	m_catStartPage = m_cfg.getInt(GENERAL_DOMAIN, "cat_startpage", 1);
 	//if(m_source_cnt == 1)
-	//	m_cfg.remove("GENERAL", "cat_startpage");
+	//	m_cfg.remove(GENERAL_DOMAIN, "cat_startpage");
 	
-	if(m_cfg.getBool("GENERAL", "update_cache", false))
+	if(m_cfg.getBool(GENERAL_DOMAIN, "update_cache", false))
 	{
-		m_cfg.setBool("GENERAL", "update_cache", false);
+		m_cfg.setBool(GENERAL_DOMAIN, "update_cache", false);
 		fsop_deleteFolder(m_listCacheDir.c_str());
 		fsop_MakeFolder(m_listCacheDir.c_str());
 	}
-	m_vid.set2DViewport(m_cfg.getInt("GENERAL", "tv_width", 640), m_cfg.getInt("GENERAL", "tv_height", 480),
-						m_cfg.getInt("GENERAL", "tv_x", 0), m_cfg.getInt("GENERAL", "tv_y", 0));
+	m_vid.set2DViewport(m_cfg.getInt(GENERAL_DOMAIN, "tv_width", 640), m_cfg.getInt(GENERAL_DOMAIN, "tv_height", 480),
+						m_cfg.getInt(GENERAL_DOMAIN, "tv_x", 0), m_cfg.getInt(GENERAL_DOMAIN, "tv_y", 0));
 
 	m_refreshGameList = true;
 	_showMain();
@@ -281,7 +281,7 @@ int CMenu::main(void)
 				if(m_current_view == COVERFLOW_HOMEBREW)
 				{
 					m_current_view = m_prev_view;
-					m_cfg.setUInt("GENERAL", "sources", m_current_view);
+					m_cfg.setUInt(GENERAL_DOMAIN, "sources", m_current_view);
 					_showCF(true);
 					continue;
 				}
@@ -375,7 +375,7 @@ int CMenu::main(void)
 				else if(m_current_view == COVERFLOW_PLUGIN || m_source_cnt > 1)
 					m_current_view = COVERFLOW_WII;
 				m_source_cnt = 1;
-				m_cfg.setUInt("GENERAL", "sources", m_current_view);
+				m_cfg.setUInt(GENERAL_DOMAIN, "sources", m_current_view);
 				m_catStartPage = 1;
 				_showCF(true);
 			}
@@ -384,7 +384,7 @@ int CMenu::main(void)
 				/* main menu global settings */
 				_hideMain();
 				_config(1);
-				if(strcmp(prevTheme, m_cfg.getString("GENERAL", "theme").c_str()) != 0)
+				if(strcmp(prevTheme, m_cfg.getString(GENERAL_DOMAIN, "theme").c_str()) != 0)
 				{
 					/* new theme - exit wiiflow and reload */
 					m_reload = true;
@@ -612,7 +612,7 @@ int CMenu::main(void)
 				_hideMain();
 				srand(time(NULL));
 				u16 place = (rand() + rand() + rand()) % CoverFlow.size();
-				if(m_cfg.getBool("GENERAL", "random_select", false))
+				if(m_cfg.getBool(GENERAL_DOMAIN, "random_select", false))
 				{
 					CoverFlow.setSelected(place);
 					_game(false);
@@ -682,7 +682,7 @@ int CMenu::main(void)
 			m_btnMgr.hide(m_mainBtnFavoritesOn);
 			m_btnMgr.hide(m_mainBtnFavoritesOff);
 		}
-		if(!m_cfg.getBool("GENERAL", "hideviews", false) && m_show_zone_main2 && !m_sourceflow && m_current_view != COVERFLOW_HOMEBREW)
+		if(!m_cfg.getBool(GENERAL_DOMAIN, "hideviews", false) && m_show_zone_main2 && !m_sourceflow && m_current_view != COVERFLOW_HOMEBREW)
 		{
 			switch(m_current_view)
 			{
@@ -758,7 +758,7 @@ int CMenu::main(void)
 	else if(Sys_GetExitTo() == EXIT_TO_SMNK2O || Sys_GetExitTo() == EXIT_TO_WFNK2O)
 	{
 		const char *ReturnPath = NULL;
-		if(!m_cfg.getBool(CHANNEL_DOMAIN, "neek_return_default", false))
+		if(!m_cfg.getBool(CHANNELS_DOMAIN, "neek_return_default", false))
 		{
 			string emuPath;
 			if(_FindEmuPart(emuPath, false, false) >= 0)// make sure emunand folder exists

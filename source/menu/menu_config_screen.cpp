@@ -52,10 +52,10 @@ void CMenu::_showConfigScreen(void)
 		if(m_configScreenLblUser[i] != -1)
 			m_btnMgr.show(m_configScreenLblUser[i]);
 
-	m_btnMgr.setText(m_configScreenLblTVWidthVal, wfmt(L"%i", 640 * 640 / max(1, m_cfg.getInt("GENERAL", "tv_width", 640))));
-	m_btnMgr.setText(m_configScreenLblTVHeightVal, wfmt(L"%i", 480 * 480 / max(1, m_cfg.getInt("GENERAL", "tv_height", 480))));
-	m_btnMgr.setText(m_configScreenLblTVXVal, wfmt(L"%i", -m_cfg.getInt("GENERAL", "tv_x", 0)));
-	m_btnMgr.setText(m_configScreenLblTVYVal, wfmt(L"%i", m_cfg.getInt("GENERAL", "tv_y", 0)));
+	m_btnMgr.setText(m_configScreenLblTVWidthVal, wfmt(L"%i", 640 * 640 / max(1, m_cfg.getInt(GENERAL_DOMAIN, "tv_width", 640))));
+	m_btnMgr.setText(m_configScreenLblTVHeightVal, wfmt(L"%i", 480 * 480 / max(1, m_cfg.getInt(GENERAL_DOMAIN, "tv_height", 480))));
+	m_btnMgr.setText(m_configScreenLblTVXVal, wfmt(L"%i", -m_cfg.getInt(GENERAL_DOMAIN, "tv_x", 0)));
+	m_btnMgr.setText(m_configScreenLblTVYVal, wfmt(L"%i", m_cfg.getInt(GENERAL_DOMAIN, "tv_y", 0)));
 }
 
 int CMenu::_configScreen(void)
@@ -86,15 +86,15 @@ int CMenu::_configScreen(void)
 				else if (m_btnMgr.selected(m_configScreenBtnTVXM) || m_btnMgr.selected(m_configScreenBtnTVYP))
 					step = 1;
 				if (m_btnMgr.selected(m_configScreenBtnTVWidthM) || m_btnMgr.selected(m_configScreenBtnTVWidthP))
-					m_cfg.setInt("GENERAL", "tv_width", min(max(512, m_cfg.getInt("GENERAL", "tv_width", 640) + step), 800));
+					m_cfg.setInt(GENERAL_DOMAIN, "tv_width", min(max(512, m_cfg.getInt(GENERAL_DOMAIN, "tv_width", 640) + step), 800));
 				else if (m_btnMgr.selected(m_configScreenBtnTVHeightM) || m_btnMgr.selected(m_configScreenBtnTVHeightP))
-					m_cfg.setInt("GENERAL", "tv_height", min(max(384, m_cfg.getInt("GENERAL", "tv_height", 480) + step), 600));
+					m_cfg.setInt(GENERAL_DOMAIN, "tv_height", min(max(384, m_cfg.getInt(GENERAL_DOMAIN, "tv_height", 480) + step), 600));
 				else if (m_btnMgr.selected(m_configScreenBtnTVXP) || m_btnMgr.selected(m_configScreenBtnTVXM))
-					m_cfg.setInt("GENERAL", "tv_x", min(max(-50, m_cfg.getInt("GENERAL", "tv_x", 0) + step), 50));
+					m_cfg.setInt(GENERAL_DOMAIN, "tv_x", min(max(-50, m_cfg.getInt(GENERAL_DOMAIN, "tv_x", 0) + step), 50));
 				else if (m_btnMgr.selected(m_configScreenBtnTVYP) || m_btnMgr.selected(m_configScreenBtnTVYM))
-					m_cfg.setInt("GENERAL", "tv_y", min(max(-30, m_cfg.getInt("GENERAL", "tv_y", 0) + step), 30));
+					m_cfg.setInt(GENERAL_DOMAIN, "tv_y", min(max(-30, m_cfg.getInt(GENERAL_DOMAIN, "tv_y", 0) + step), 30));
 				_showConfigScreen();
-				m_vid.set2DViewport(m_cfg.getInt("GENERAL", "tv_width", 640), m_cfg.getInt("GENERAL", "tv_height", 480), m_cfg.getInt("GENERAL", "tv_x", 0), m_cfg.getInt("GENERAL", "tv_y", 0));
+				m_vid.set2DViewport(m_cfg.getInt(GENERAL_DOMAIN, "tv_width", 640), m_cfg.getInt(GENERAL_DOMAIN, "tv_height", 480), m_cfg.getInt(GENERAL_DOMAIN, "tv_x", 0), m_cfg.getInt(GENERAL_DOMAIN, "tv_y", 0));
 			}
 		}
 	}

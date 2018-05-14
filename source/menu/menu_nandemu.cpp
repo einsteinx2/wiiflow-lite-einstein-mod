@@ -105,8 +105,8 @@ void CMenu::_listEmuNands(const char *path, vector<string> &emuNands)
 void CMenu::_checkEmuNandSettings(void)
 {
 	u8 i;
-	string emuNand = m_cfg.getString(CHANNEL_DOMAIN, "current_emunand", "default");
-	int emuPart = m_cfg.getInt(CHANNEL_DOMAIN, "partition", 0);
+	string emuNand = m_cfg.getString(CHANNELS_DOMAIN, "current_emunand", "default");
+	int emuPart = m_cfg.getInt(CHANNELS_DOMAIN, "partition", 0);
 	string savesNand = m_cfg.getString(WII_DOMAIN, "current_save_emunand", "default");
 	int savesPart = m_cfg.getInt(WII_DOMAIN, "savepartition", 0);
 
@@ -178,8 +178,8 @@ void CMenu::_checkEmuNandSettings(void)
 	
 	m_cfg.setString(WII_DOMAIN, "current_save_emunand", savesNands[curSavesNand]);
 	m_cfg.setInt(WII_DOMAIN, "savepartition", savesPart);
-	m_cfg.setString(CHANNEL_DOMAIN, "current_emunand", emuNands[curEmuNand]);
-	m_cfg.setInt(CHANNEL_DOMAIN, "partition", emuPart);
+	m_cfg.setString(CHANNELS_DOMAIN, "current_emunand", emuNands[curEmuNand]);
+	m_cfg.setInt(CHANNELS_DOMAIN, "partition", emuPart);
 	// add check if full emulation and if is then check for config and mii files
 	_FullNandCheck();
 }
@@ -192,7 +192,7 @@ void CMenu::_FullNandCheck(void)
 	{
 		int emulate_mode;
 		if(i == 0)
-			emulate_mode = 	m_cfg.getInt(CHANNEL_DOMAIN, "emulation", 0);
+			emulate_mode = 	m_cfg.getInt(CHANNELS_DOMAIN, "emulation", 0);
 		else
 			emulate_mode = 	m_cfg.getInt(WII_DOMAIN, "save_emulation", 0);
 		if((i == 0 && emulate_mode == 1) || (i == 1 && emulate_mode == 2))//full
@@ -236,8 +236,8 @@ int CMenu::_FindEmuPart(string &emuPath, bool skipchecks, bool savesnand)
 	}
 	else
 	{
-		emuPart = m_cfg.getInt(CHANNEL_DOMAIN, "partition");
-		tmpPath = fmt("/%s/%s",  emu_nands_dir, m_cfg.getString(CHANNEL_DOMAIN, "current_emunand").c_str());
+		emuPart = m_cfg.getInt(CHANNELS_DOMAIN, "partition");
+		tmpPath = fmt("/%s/%s",  emu_nands_dir, m_cfg.getString(CHANNELS_DOMAIN, "current_emunand").c_str());
 	}
 	if(!DeviceHandle.PartitionUsableForNandEmu(emuPart))
 		return -1;
@@ -460,13 +460,13 @@ void CMenu::_showNandEmu(void)
 
 	if(nandemuPage == 1)
 	{
-		int i = min(max(0, m_cfg.getInt(CHANNEL_DOMAIN, "emulation", 0)), (int)ARRAY_SIZE(CMenu::_NandEmu) - 1);
+		int i = min(max(0, m_cfg.getInt(CHANNELS_DOMAIN, "emulation", 0)), (int)ARRAY_SIZE(CMenu::_NandEmu) - 1);
 		m_btnMgr.setText(m_nandemuLblEmulationVal, _t(CMenu::_NandEmu[i].id, CMenu::_NandEmu[i].text));
 		
 		i = min(max(0, m_cfg.getInt(WII_DOMAIN, "save_emulation", 0)), (int)ARRAY_SIZE(CMenu::_GlobalSaveEmu) - 1);
 		m_btnMgr.setText(m_nandemuLblSaveEmulationVal, _t(CMenu::_GlobalSaveEmu[i].id, CMenu::_GlobalSaveEmu[i].text));
 		
-		m_btnMgr.setText(m_nandemuLblNandSelectVal, m_cfg.getString(CHANNEL_DOMAIN, "current_emunand"));
+		m_btnMgr.setText(m_nandemuLblNandSelectVal, m_cfg.getString(CHANNELS_DOMAIN, "current_emunand"));
 		m_btnMgr.setText(m_nandemuLblSaveNandSelectVal, m_cfg.getString(WII_DOMAIN, "current_save_emunand"));
 		
 		m_btnMgr.show(m_nandemuLblNandSelect);
@@ -521,7 +521,7 @@ int CMenu::_NandEmuCfg(void)
 {	
 	nandemuPage = 1;
 	string ExtNand = "";
-	string emuNand = m_cfg.getString(CHANNEL_DOMAIN, "current_emunand");
+	string emuNand = m_cfg.getString(CHANNELS_DOMAIN, "current_emunand");
 	lwp_t thread = 0;
 	SetupInput();
 	_checkEmuNandSettings();
@@ -564,7 +564,7 @@ int CMenu::_NandEmuCfg(void)
 		else if(BTN_A_PRESSED && (m_btnMgr.selected(m_nandemuBtnEmulationP) || m_btnMgr.selected(m_nandemuBtnEmulationM)))
 		{
 			s8 direction = m_btnMgr.selected(m_nandemuBtnEmulationP) ? 1 : -1;
-			m_cfg.setInt(CHANNEL_DOMAIN, "emulation", loopNum(m_cfg.getInt(CHANNEL_DOMAIN, "emulation", 0) + direction, ARRAY_SIZE(CMenu::_NandEmu)));
+			m_cfg.setInt(CHANNELS_DOMAIN, "emulation", loopNum(m_cfg.getInt(CHANNELS_DOMAIN, "emulation", 0) + direction, ARRAY_SIZE(CMenu::_NandEmu)));
 			_showNandEmu();
 		}
 		else if(BTN_A_PRESSED && (m_btnMgr.selected(m_nandemuBtnSaveEmulationP) || m_btnMgr.selected(m_nandemuBtnSaveEmulationM)))
@@ -630,7 +630,7 @@ int CMenu::_NandEmuCfg(void)
 		{
 			s8 direction = m_btnMgr.selected(m_nandemuBtnNandSelectP) ? 1 : -1;
 			curEmuNand = loopNum(curEmuNand + direction, emuNands.size());
-			m_cfg.setString(CHANNEL_DOMAIN, "current_emunand", emuNands[curEmuNand]);
+			m_cfg.setString(CHANNELS_DOMAIN, "current_emunand", emuNands[curEmuNand]);
 			_showNandEmu();
 		}
 		else if(BTN_A_PRESSED && (m_btnMgr.selected(m_nandemuBtnSaveNandSelectP) || m_btnMgr.selected(m_nandemuBtnSaveNandSelectM)))
@@ -692,9 +692,9 @@ int CMenu::_NandEmuCfg(void)
 	}
 	_hideNandEmu();
 	_FullNandCheck();
-	if(emuNand != m_cfg.getString(CHANNEL_DOMAIN, "current_emunand") || emuNand == ExtNand)
+	if(emuNand != m_cfg.getString(CHANNELS_DOMAIN, "current_emunand") || emuNand == ExtNand)
 	{
-		m_cfg.setBool(CHANNEL_DOMAIN, "update_cache", true);
+		m_cfg.setBool(CHANNELS_DOMAIN, "update_cache", true);
 		if(m_current_view & COVERFLOW_CHANNEL)
 			m_refreshGameList = true;
 	}

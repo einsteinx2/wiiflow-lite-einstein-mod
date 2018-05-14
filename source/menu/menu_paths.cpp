@@ -125,10 +125,10 @@ void CMenu::_Paths(void)
 			if (m_btnMgr.selected(m_pathsBtn1))
 			{
 				_hidePaths();
-				path = _FolderExplorer(m_cfg.getString("GENERAL", "dir_box_covers").c_str());
+				path = _FolderExplorer(m_cfg.getString(GENERAL_DOMAIN, "dir_box_covers").c_str());
 				if(strlen(path) > 0)
 				{
-					m_cfg.setString("GENERAL", "dir_box_covers", path);
+					m_cfg.setString(GENERAL_DOMAIN, "dir_box_covers", path);
 					m_boxPicDir = path;
 					//m_refreshGameList = true;
 					_initCF();
@@ -138,10 +138,10 @@ void CMenu::_Paths(void)
 			else if (m_btnMgr.selected(m_pathsBtn2))
 			{
 				_hidePaths();
-				path = _FolderExplorer(m_cfg.getString("GENERAL", "dir_flat_covers").c_str());
+				path = _FolderExplorer(m_cfg.getString(GENERAL_DOMAIN, "dir_flat_covers").c_str());
 				if(strlen(path) > 0)
 				{
-					m_cfg.setString("GENERAL", "dir_flat_covers", path);
+					m_cfg.setString(GENERAL_DOMAIN, "dir_flat_covers", path);
 					m_picDir = path;
 					//m_refreshGameList = true;
 					_initCF();
@@ -151,10 +151,10 @@ void CMenu::_Paths(void)
 			else if (m_btnMgr.selected(m_pathsBtn3))
 			{
 				_hidePaths();
-				path = _FolderExplorer(m_cfg.getString("GENERAL", "dir_custom_banners").c_str());
+				path = _FolderExplorer(m_cfg.getString(GENERAL_DOMAIN, "dir_custom_banners").c_str());
 				if(strlen(path) > 0)
 				{
-					m_cfg.setString("GENERAL", "dir_custom_banners", path);
+					m_cfg.setString(GENERAL_DOMAIN, "dir_custom_banners", path);
 					m_customBnrDir = path;
 				}
 				_showPaths();
@@ -162,10 +162,10 @@ void CMenu::_Paths(void)
 			else if (m_btnMgr.selected(m_pathsBtn4))
 			{
 				_hidePaths();
-				path = _FolderExplorer(m_cfg.getString("GENERAL", "dir_banner_cache").c_str());
+				path = _FolderExplorer(m_cfg.getString(GENERAL_DOMAIN, "dir_banner_cache").c_str());
 				if(strlen(path) > 0)
 				{
-					m_cfg.setString("GENERAL", "dir_banner_cache", path);
+					m_cfg.setString(GENERAL_DOMAIN, "dir_banner_cache", path);
 					m_bnrCacheDir = path;
 				}
 				_showPaths();
@@ -203,26 +203,26 @@ void CMenu::_Paths(void)
 			else if (m_btnMgr.selected(m_pathsBtn2))
 			{
 				_hidePaths();
-				currentPartition = m_cfg.getInt(GC_DOMAIN, "partition", USB1);
+				currentPartition = m_cfg.getInt(GAMECUBE_DOMAIN, "partition", USB1);
 				string gameDir(fmt(gc_games_dir, DeviceName[currentPartition]));
 				path = _FolderExplorer(gameDir.c_str());
 				if(strlen(path) > 0)
 				{
 					if(strncmp(path, "sd:/", 4) == 0)
-						m_cfg.setInt(GC_DOMAIN, "partition", 0);
+						m_cfg.setInt(GAMECUBE_DOMAIN, "partition", 0);
 					else
 					{
 						//might add error check to make sure its first partition and FAT only
 						const char *partval = &path[3];
-						m_cfg.setInt(GC_DOMAIN, "partition", atoi(partval));
+						m_cfg.setInt(GAMECUBE_DOMAIN, "partition", atoi(partval));
 					}
 					char tmpPath[MAX_FAT_PATH];
 					strcpy(tmpPath, "%s");
 					strcat(tmpPath, strchr(path, ':'));
-					m_cfg.setString(GC_DOMAIN, "gc_games_dir", tmpPath);
+					m_cfg.setString(GAMECUBE_DOMAIN, "gc_games_dir", tmpPath);
 					memset(gc_games_dir, 0, 64);
 					strncpy(gc_games_dir, tmpPath, 64);
-					m_cfg.setBool(GC_DOMAIN, "update_cache", true);
+					m_cfg.setBool(GAMECUBE_DOMAIN, "update_cache", true);
 					if(m_current_view & COVERFLOW_GAMECUBE)
 						m_refreshGameList = true;
 				}
@@ -231,10 +231,10 @@ void CMenu::_Paths(void)
 			if (m_btnMgr.selected(m_pathsBtn3))
 			{
 				_hidePaths();
-				path = _FolderExplorer(m_cfg.getString("GENERAL", "dir_music").c_str());
+				path = _FolderExplorer(m_cfg.getString(GENERAL_DOMAIN, "dir_music").c_str());
 				if(strlen(path) > 0)
 				{
-					m_cfg.setString("GENERAL", "dir_music", path);
+					m_cfg.setString(GENERAL_DOMAIN, "dir_music", path);
 					m_musicDir = path;
 					MusicPlayer.Init(m_cfg, m_musicDir, fmt("%s/music", m_themeDataDir.c_str()));
 

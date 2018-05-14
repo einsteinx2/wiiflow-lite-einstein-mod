@@ -323,7 +323,7 @@ void CMenu::_cfTheme(void)
 		{
 			m_coverflow.clear();
 			m_coverflow.unload();
-			m_coverflow.load(fmt("%s/coverflows/%s.ini", m_themeDir.c_str(), m_cfg.getString("GENERAL", "theme", "default").c_str()));
+			m_coverflow.load(fmt("%s/coverflows/%s.ini", m_themeDir.c_str(), m_cfg.getString(GENERAL_DOMAIN, "theme", "default").c_str()));
 			if(!m_coverflow.loaded())
 				m_coverflow.load(fmt("%s/coverflows/default.ini", m_themeDir.c_str()));
 			break;
@@ -416,7 +416,7 @@ void CMenu::_cfTheme(void)
 			{
 				m_coverflow.clear();
 				m_coverflow.unload();
-				m_coverflow.load(fmt("%s/coverflows/%s.ini", m_themeDir.c_str(), m_cfg.getString("GENERAL", "theme", "default").c_str()));
+				m_coverflow.load(fmt("%s/coverflows/%s.ini", m_themeDir.c_str(), m_cfg.getString(GENERAL_DOMAIN, "theme", "default").c_str()));
 				if(!m_coverflow.loaded())
 					m_coverflow.load(fmt("%s/coverflows/default.ini", m_themeDir.c_str()));
 				break;

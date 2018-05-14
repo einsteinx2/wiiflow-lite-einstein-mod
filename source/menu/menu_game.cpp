@@ -400,7 +400,7 @@ bool CMenu::_startVideo()
 		/* Lets play the movie */
 		movie.Init(THP_Path);
 		m_gameSound.Load(fmt("%s.ogg", videoPath));
-		m_gameSound.SetVolume(m_cfg.getInt("GENERAL", "sound_volume_bnr", 255));
+		m_gameSound.SetVolume(m_cfg.getInt(GENERAL_DOMAIN, "sound_volume_bnr", 255));
 		m_video_playing = true;
 		m_gameSound.Play();
 		movie.Play(true); //video loops sound doesnt
@@ -643,20 +643,20 @@ void CMenu::_game(bool launch)
 				_hideGame();
 				MusicPlayer.Stop();
 				_cleanupBanner();
-				m_cfg.setInt("GENERAL", "cat_startpage", m_catStartPage);
+				m_cfg.setInt(GENERAL_DOMAIN, "cat_startpage", m_catStartPage);
 				m_gcfg2.load(fmt("%s/" GAME_SETTINGS2_FILENAME, m_settingsDir.c_str()));
 				/* change to current game's partition */
 				switch(hdr->type)
 				{
 					case TYPE_CHANNEL:
 					case TYPE_EMUCHANNEL:
-						currentPartition = m_cfg.getInt(CHANNEL_DOMAIN, "partition", 1);
+						currentPartition = m_cfg.getInt(CHANNELS_DOMAIN, "partition", 1);
 						break;
 					case TYPE_HOMEBREW:
 						currentPartition = m_cfg.getInt(HOMEBREW_DOMAIN, "partition", 1);
 						break;
 					case TYPE_GC_GAME:
-						currentPartition = m_cfg.getInt(GC_DOMAIN, "partition", 1);
+						currentPartition = m_cfg.getInt(GAMECUBE_DOMAIN, "partition", 1);
 						break;
 					case TYPE_WII_GAME:
 						currentPartition = m_cfg.getInt(WII_DOMAIN, "partition", 1);
@@ -1065,7 +1065,7 @@ void CMenu::_launchGC(dir_discHdr *hdr, bool disc)
 	
 	/* Get loader choice*/
 	u8 loader = min(m_gcfg2.getUInt(id, "gc_loader", 0), ARRAY_SIZE(CMenu::_GCLoader) - 1u);
-	loader = (loader == 0) ? min(m_cfg.getUInt(GC_DOMAIN, "default_loader", 1), ARRAY_SIZE(CMenu::_GlobalGCLoaders) - 1u) : loader-1;
+	loader = (loader == 0) ? min(m_cfg.getUInt(GAMECUBE_DOMAIN, "default_loader", 1), ARRAY_SIZE(CMenu::_GlobalGCLoaders) - 1u) : loader-1;
 	
 	if(disc)
 		loader = NINTENDONT;
@@ -1095,13 +1095,13 @@ void CMenu::_launchGC(dir_discHdr *hdr, bool disc)
 		path = hdr->path;
 		
 	u8 GClanguage = min(m_gcfg2.getUInt(id, "language", 0), ARRAY_SIZE(CMenu::_GClanguages) - 1u);
-	GClanguage = (GClanguage == 0) ? min(m_cfg.getUInt(GC_DOMAIN, "game_language", 0), ARRAY_SIZE(CMenu::_GlobalGClanguages) - 1u) : GClanguage-1;
+	GClanguage = (GClanguage == 0) ? min(m_cfg.getUInt(GAMECUBE_DOMAIN, "game_language", 0), ARRAY_SIZE(CMenu::_GlobalGClanguages) - 1u) : GClanguage-1;
 	// language selection only works for PAL games
 	if(id[3] == 'E' || id[3] == 'J')
 		GClanguage = 1; //=english
 		
 	u8 videoMode = min(m_gcfg2.getUInt(id, "video_mode", 0), ARRAY_SIZE(CMenu::_GCvideoModes) - 1u);
-	videoMode = (videoMode == 0) ? min(m_cfg.getUInt(GC_DOMAIN, "video_mode", 0), ARRAY_SIZE(CMenu::_GlobalGCvideoModes) - 1u) : videoMode-1;
+	videoMode = (videoMode == 0) ? min(m_cfg.getUInt(GAMECUBE_DOMAIN, "video_mode", 0), ARRAY_SIZE(CMenu::_GlobalGCvideoModes) - 1u) : videoMode-1;
 
 	bool widescreen = m_gcfg2.getBool(id, "widescreen", false);
 	bool activity_led = m_gcfg2.getBool(id, "led", false);
@@ -1110,11 +1110,11 @@ void CMenu::_launchGC(dir_discHdr *hdr, bool disc)
 	{
 		/* might add here - if not a disc use path to check for disc2.iso - if so then we need to prompt disc 1 or disc 2? */
 		u8 emuMC = min(m_gcfg2.getUInt(id, "emu_memcard", 0), ARRAY_SIZE(CMenu::_NinEmuCard) - 1u);
-		emuMC = (emuMC == 0) ? m_cfg.getUInt(GC_DOMAIN, "emu_memcard", 1) : emuMC - 1;
+		emuMC = (emuMC == 0) ? m_cfg.getUInt(GAMECUBE_DOMAIN, "emu_memcard", 1) : emuMC - 1;
 		
 		// these 2 settings have global defaults in wfl main config
-		bool cc_rumble = m_gcfg2.testOptBool(id, "cc_rumble", m_cfg.getBool(GC_DOMAIN, "cc_rumble", false));
-		bool native_ctl = m_gcfg2.testOptBool(id, "native_ctl", m_cfg.getBool(GC_DOMAIN, "native_ctl", false));
+		bool cc_rumble = m_gcfg2.testOptBool(id, "cc_rumble", m_cfg.getBool(GAMECUBE_DOMAIN, "cc_rumble", false));
+		bool native_ctl = m_gcfg2.testOptBool(id, "native_ctl", m_cfg.getBool(GAMECUBE_DOMAIN, "native_ctl", false));
 		
 		bool deflicker = m_gcfg2.getBool(id, "deflicker", false);
 		bool tri_arcade = m_gcfg2.getBool(id, "triforce_arcade", false);
@@ -1126,10 +1126,10 @@ void CMenu::_launchGC(dir_discHdr *hdr, bool disc)
 		
 		s8 vidscale = m_gcfg2.getInt(id, "nin_width", 127);
 		if(vidscale == 127)
-			vidscale = m_cfg.getInt(GC_DOMAIN, "nin_width", 0);
+			vidscale = m_cfg.getInt(GAMECUBE_DOMAIN, "nin_width", 0);
 		s8 vidoffset = m_gcfg2.getInt(id, "nin_pos", 127);
 		if(vidoffset == 127)
-			vidoffset = m_cfg.getInt(GC_DOMAIN, "nin_pos", 0);
+			vidoffset = m_cfg.getInt(GAMECUBE_DOMAIN, "nin_pos", 0);
 
 		/* configs no longer needed */
 		m_gcfg1.save(true);
@@ -1296,7 +1296,7 @@ void CMenu::_launchGC(dir_discHdr *hdr, bool disc)
 		else
 			videoMode = 1; //PAL 576i 50hz
 			
-		bool memcard_emu = m_gcfg2.testOptBool(id, "devo_memcard_emu", m_cfg.getBool(GC_DOMAIN, "devo_memcard_emu", false));
+		bool memcard_emu = m_gcfg2.testOptBool(id, "devo_memcard_emu", m_cfg.getBool(GAMECUBE_DOMAIN, "devo_memcard_emu", false));
 		
 		/* configs no longer needed */
 		m_gcfg1.save(true);
@@ -1453,14 +1453,14 @@ void CMenu::_launchChannel(dir_discHdr *hdr)
 	bool countryPatch = m_gcfg2.getBool(id, "country_patch", false);
 
 	u8 videoMode = min(m_gcfg2.getUInt(id, "video_mode", 0), ARRAY_SIZE(CMenu::_VideoModes) - 1u);
-	videoMode = (videoMode == 0) ? min(m_cfg.getUInt("GENERAL", "video_mode", 0), ARRAY_SIZE(CMenu::_GlobalVideoModes) - 1u) : videoMode - 1;
+	videoMode = (videoMode == 0) ? min(m_cfg.getUInt(GENERAL_DOMAIN, "video_mode", 0), ARRAY_SIZE(CMenu::_GlobalVideoModes) - 1u) : videoMode - 1;
 
 	int language = min(m_gcfg2.getUInt(id, "language", 0), ARRAY_SIZE(CMenu::_languages) - 1u);
-	language = (language == 0) ? min(m_cfg.getUInt("GENERAL", "game_language", 0), ARRAY_SIZE(CMenu::_languages) - 1u) : language;
+	language = (language == 0) ? min(m_cfg.getUInt(GENERAL_DOMAIN, "game_language", 0), ARRAY_SIZE(CMenu::_languages) - 1u) : language;
 
 	u8 patchVidMode = min(m_gcfg2.getUInt(id, "patch_video_modes", 0), ARRAY_SIZE(CMenu::_vidModePatch) - 1u);
 	int aspectRatio = min(m_gcfg2.getUInt(id, "aspect_ratio", 0), ARRAY_SIZE(CMenu::_AspectRatio) - 1) - 1;// -1,0,1
-	const char *rtrn = m_gcfg2.getBool(id, "returnto", true) ? m_cfg.getString("GENERAL", "returnto").c_str() : NULL;
+	const char *rtrn = m_gcfg2.getBool(id, "returnto", true) ? m_cfg.getString(GENERAL_DOMAIN, "returnto").c_str() : NULL;
 	u32 returnTo = rtrn[0] << 24 | rtrn[1] << 16 | rtrn[2] << 8 | rtrn[3];
 
 	u8 *cheatFile = NULL;
@@ -1483,7 +1483,7 @@ void CMenu::_launchChannel(dir_discHdr *hdr)
 	m_gcfg1.setUInt("LASTPLAYED", id, time(NULL));
 
 	//interesting - there is only a global option for nand emulation - no per game choice
-	int emulate_mode = min(max(0, m_cfg.getInt(CHANNEL_DOMAIN, "emulation", 1)), (int)ARRAY_SIZE(CMenu::_NandEmu) - 1);
+	int emulate_mode = min(max(0, m_cfg.getInt(CHANNELS_DOMAIN, "emulation", 1)), (int)ARRAY_SIZE(CMenu::_NandEmu) - 1);
 	
 	int userIOS = m_gcfg2.getInt(id, "ios", 0);
 	u64 gameTitle = TITLE_ID(hdr->settings[0],hdr->settings[1]);
@@ -1494,10 +1494,10 @@ void CMenu::_launchChannel(dir_discHdr *hdr)
 	if(NANDemuView && !neek2o())
 	{
 		/* copy real NAND sysconf, settings.txt, & RFL_DB.dat if you want to, they are replaced if they already exist */
-		NandHandle.PreNandCfg(m_cfg.getBool(CHANNEL_DOMAIN, "real_nand_miis", false), 
-								m_cfg.getBool(CHANNEL_DOMAIN, "real_nand_config", false));
-		m_cfg.setBool(CHANNEL_DOMAIN, "real_nand_miis", false); 
-		m_cfg.setBool(CHANNEL_DOMAIN, "real_nand_config", false);
+		NandHandle.PreNandCfg(m_cfg.getBool(CHANNELS_DOMAIN, "real_nand_miis", false), 
+								m_cfg.getBool(CHANNELS_DOMAIN, "real_nand_config", false));
+		m_cfg.setBool(CHANNELS_DOMAIN, "real_nand_miis", false); 
+		m_cfg.setBool(CHANNELS_DOMAIN, "real_nand_config", false);
 	}
 
 	/* configs no longer needed */
@@ -1632,10 +1632,10 @@ void CMenu::_launchGame(dir_discHdr *hdr, bool dvd, bool disc_cfg)
 					if(disc_cfg)
 						_gameSettings(hdr, dvd);
 					MusicPlayer.Stop();
-					m_cfg.setInt("GENERAL", "cat_startpage", m_catStartPage);
+					m_cfg.setInt(GENERAL_DOMAIN, "cat_startpage", m_catStartPage);
 					if(!disc_cfg)
 						m_gcfg2.load(fmt("%s/" GAME_SETTINGS2_FILENAME, m_settingsDir.c_str()));
-					currentPartition = m_cfg.getInt(GC_DOMAIN, "partition", 1);
+					currentPartition = m_cfg.getInt(GAMECUBE_DOMAIN, "partition", 1);
 					_launchGC(hdr, dvd);
 				}
 				else
@@ -1653,7 +1653,7 @@ void CMenu::_launchGame(dir_discHdr *hdr, bool dvd, bool disc_cfg)
 			if(disc_cfg)
 				_gameSettings(hdr, dvd);
 			MusicPlayer.Stop();
-			m_cfg.setInt("GENERAL", "cat_startpage", m_catStartPage);
+			m_cfg.setInt(GENERAL_DOMAIN, "cat_startpage", m_catStartPage);
 			if(!disc_cfg)
 				m_gcfg2.load(fmt("%s/" GAME_SETTINGS2_FILENAME, m_settingsDir.c_str()));
 			currentPartition = m_cfg.getInt(WII_DOMAIN, "partition", 1);
@@ -1668,12 +1668,12 @@ void CMenu::_launchGame(dir_discHdr *hdr, bool dvd, bool disc_cfg)
 	bool private_server = m_gcfg2.getBool(id, "private_server", false);
 
 	u8 videoMode = min(m_gcfg2.getUInt(id, "video_mode", 0), ARRAY_SIZE(CMenu::_VideoModes) - 1u);
-	videoMode = (videoMode == 0) ? min(m_cfg.getUInt("GENERAL", "video_mode", 0), ARRAY_SIZE(CMenu::_GlobalVideoModes) - 1u) : videoMode-1;
+	videoMode = (videoMode == 0) ? min(m_cfg.getUInt(GENERAL_DOMAIN, "video_mode", 0), ARRAY_SIZE(CMenu::_GlobalVideoModes) - 1u) : videoMode-1;
 
 	int language = min(m_gcfg2.getUInt(id, "language", 0), ARRAY_SIZE(CMenu::_languages) - 1u);
-	language = (language == 0) ? min(m_cfg.getUInt("GENERAL", "game_language", 0), ARRAY_SIZE(CMenu::_languages) - 1u) : language;
+	language = (language == 0) ? min(m_cfg.getUInt(GENERAL_DOMAIN, "game_language", 0), ARRAY_SIZE(CMenu::_languages) - 1u) : language;
 
-	const char *rtrn = m_cfg.getString("GENERAL", "returnto", "").c_str();
+	const char *rtrn = m_cfg.getString(GENERAL_DOMAIN, "returnto", "").c_str();
 	int aspectRatio = min(m_gcfg2.getUInt(id, "aspect_ratio", 0), ARRAY_SIZE(CMenu::_AspectRatio) - 1u) - 1;
 	u8 patchVidMode = min(m_gcfg2.getUInt(id, "patch_video_modes", 0), ARRAY_SIZE(CMenu::_vidModePatch) - 1u);
 
@@ -1778,7 +1778,7 @@ void CMenu::_launchGame(dir_discHdr *hdr, bool dvd, bool disc_cfg)
 
 	//this is a temp region change of real nand(rn) for gamesave or off or DVD if tempregionrn is set true
 	bool patchregion = false;
-	if(emulate_mode <= 1 && !neek2o() && m_cfg.getBool("GENERAL", "tempregionrn", false))
+	if(emulate_mode <= 1 && !neek2o() && m_cfg.getBool(GENERAL_DOMAIN, "tempregionrn", false))
 	{
 		gprintf("Temp region change applied\n");
 		// change real nand region to game ID[3] region. is reset when you turn wii off.

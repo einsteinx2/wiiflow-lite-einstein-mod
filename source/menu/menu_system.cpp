@@ -62,8 +62,8 @@ void CMenu::_system()
 				m_btnMgr.hide(m_downloadPBar);
 				m_btnMgr.hide(m_downloadLblMessage[0], 0, 0, -2.f, 0.f);
 				m_btnMgr.hide(m_downloadLblMessage[1], 0, 0, -2.f, 0.f);
-				CMenu::_version[1] = m_version.getInt("GENERAL", "version", SVN_REV_NUM);
-				num_versions = m_version.getInt("GENERAL", "num_versions", 1);
+				CMenu::_version[1] = m_version.getInt(GENERAL_DOMAIN, "version", SVN_REV_NUM);
+				num_versions = m_version.getInt(GENERAL_DOMAIN, "num_versions", 1);
 				for (i = 2; i < num_versions; i++)
 				{
 					CMenu::_version[i] = m_version.getInt(fmt("VERSION%i", i-1u), "version", SVN_REV_NUM);
@@ -105,9 +105,9 @@ void CMenu::_system()
 				m_thrdWorking = true;
 				gprintf("\nVersion to DL: %i\n", newVer);
 
-				if(m_version.getInt("GENERAL", "version", 0) == newVer)
-					m_app_update_size = m_version.getInt("GENERAL", "app_zip_size", 0);
-				m_data_update_size = m_version.getInt("GENERAL", "data_zip_size", 0);
+				if(m_version.getInt(GENERAL_DOMAIN, "version", 0) == newVer)
+					m_app_update_size = m_version.getInt(GENERAL_DOMAIN, "app_zip_size", 0);
+				m_data_update_size = m_version.getInt(GENERAL_DOMAIN, "data_zip_size", 0);
 
 				m_app_update_url = fmt("%s/Mod%i.zip", ("http://nintendont.gxarena.com/banners"), newVer);
 				m_data_update_url = fmt("%s/r%i/data.zip", ("http://nintendont.gxarena.com/banners"), newVer);
@@ -145,7 +145,7 @@ void CMenu::_system()
 						if (i == num_versions)
 							m_btnMgr.setText(m_systemLblInfo, _t("sys7", L"Installed Version."), false);
 						else
-							m_btnMgr.setText(m_systemLblInfo, m_version.getWString("GENERAL", "changes"), false);
+							m_btnMgr.setText(m_systemLblInfo, m_version.getWString(GENERAL_DOMAIN, "changes"), false);
 				}
 			}
 			else if (m_btnMgr.selected(m_systemBtnVerSelectP))
@@ -165,7 +165,7 @@ void CMenu::_system()
 						if (i == num_versions)
 							m_btnMgr.setText(m_systemLblInfo, _t("sys7", L"Installed Version."), false);
 						else
-							m_btnMgr.setText(m_systemLblInfo, m_version.getWString("GENERAL", "changes"), false);
+							m_btnMgr.setText(m_systemLblInfo, m_version.getWString(GENERAL_DOMAIN, "changes"), false);
 				}
 			}
 		}
@@ -291,6 +291,6 @@ void CMenu::_textSystem(void)
 			if (i == num_versions)
 				m_btnMgr.setText(m_systemLblInfo, _t("sys7", L"Installed Version."), false);
 			else
-				m_btnMgr.setText(m_systemLblInfo, m_version.getWString("GENERAL", "changes"), false);
+				m_btnMgr.setText(m_systemLblInfo, m_version.getWString(GENERAL_DOMAIN, "changes"), false);
 	}
 }

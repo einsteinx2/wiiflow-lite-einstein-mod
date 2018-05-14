@@ -410,8 +410,8 @@ s32 CMenu::_networkComplete(s32 ok, void *usrData)
 	gprintf("NET: Network init complete, enabled wifi_gecko: %s\n", m->m_use_wifi_gecko ? "yes" : "no");
 	if(m->m_use_wifi_gecko)
 	{
-		const string &ip = m->m_cfg.getString("DEBUG", "wifi_gecko_ip");
-		u16 port = m->m_cfg.getInt("DEBUG", "wifi_gecko_port", 4405);
+		const string &ip = m->m_cfg.getString(DEBUG_DOMAIN, "wifi_gecko_ip");
+		u16 port = m->m_cfg.getInt(DEBUG_DOMAIN, "wifi_gecko_port", 4405);
 		if(ip.size() > 0 && port != 0)
 			WiFiDebugger.Init(ip.c_str(), port);
 	}
@@ -451,12 +451,12 @@ int CMenu::_coverDownloader(bool missingOnly)
 		m_thrdWorking = false;
 		return 0;
 	}
-	bool savePNG = m_cfg.getBool("GENERAL", "keep_png", true);
+	bool savePNG = m_cfg.getBool(GENERAL_DOMAIN, "keep_png", true);
 
-	vector<string> fmtURLBox = stringToVector(m_cfg.getString("GENERAL", "url_full_covers", FMT_BPIC_URL), '|');
-	vector<string> fmtURLFlat = stringToVector(m_cfg.getString("GENERAL", "url_flat_covers", FMT_PIC_URL), '|');
-	vector<string> fmtURLCBox = stringToVector(m_cfg.getString("GENERAL", "url_custom_full_covers", FMT_CBPIC_URL), '|');
-	vector<string> fmtURLCFlat = stringToVector(m_cfg.getString("GENERAL", "url_custom_flat_covers", FMT_CPIC_URL), '|');
+	vector<string> fmtURLBox = stringToVector(m_cfg.getString(GENERAL_DOMAIN, "url_full_covers", FMT_BPIC_URL), '|');
+	vector<string> fmtURLFlat = stringToVector(m_cfg.getString(GENERAL_DOMAIN, "url_flat_covers", FMT_PIC_URL), '|');
+	vector<string> fmtURLCBox = stringToVector(m_cfg.getString(GENERAL_DOMAIN, "url_custom_full_covers", FMT_CBPIC_URL), '|');
+	vector<string> fmtURLCFlat = stringToVector(m_cfg.getString(GENERAL_DOMAIN, "url_custom_flat_covers", FMT_CPIC_URL), '|');
 
 	u32 nbSteps = m_gameList.size();
 	u32 step = 0;
@@ -534,7 +534,7 @@ int CMenu::_coverDownloader(bool missingOnly)
 
 		Config m_newID;
 		m_newID.load(fmt("%s/newid.ini", m_settingsDir.c_str()));
-		m_newID.setString("CHANNELS", "WFSF", "DWFA");
+		m_newID.setString(CHANNELS_DOMAIN, "WFSF", "DWFA");
 		u32 CoverType = 0;
 
 		for(u32 i = 0; i < coverList.size() && !m_thrdStop; ++i)
@@ -1284,7 +1284,7 @@ void CMenu::_download(string gameId)
 					}
 				}
 				_hideSettings();
-				m_cfg.setUInt( "GENERAL", "cover_prio", m_downloadPrioVal );
+				m_cfg.setUInt(GENERAL_DOMAIN, "cover_prio", m_downloadPrioVal );
 				m_cfg.save();
 				_showSettings();
 			}
@@ -1331,7 +1331,7 @@ void CMenu::_download(string gameId)
 					}
 				}
 				_hideSettings();
-				m_cfg.setUInt( "GENERAL", "cover_prio", m_downloadPrioVal );
+				m_cfg.setUInt(GENERAL_DOMAIN, "cover_prio", m_downloadPrioVal );
 				m_cfg.save();
 				_showSettings();
 			}
@@ -1355,7 +1355,7 @@ void CMenu::_download(string gameId)
 			{
 				_hideSettings();
 				m_downloadPrioVal ^= C_TYPE_EN;
-				m_cfg.setUInt( "GENERAL", "cover_prio", m_downloadPrioVal );
+				m_cfg.setUInt(GENERAL_DOMAIN, "cover_prio", m_downloadPrioVal );
 				m_cfg.save();
 				_showSettings();
 			}
@@ -1363,7 +1363,7 @@ void CMenu::_download(string gameId)
 			{
 				_hideSettings();
 				m_downloadPrioVal ^= C_TYPE_JA;
-				m_cfg.setUInt( "GENERAL", "cover_prio", m_downloadPrioVal );
+				m_cfg.setUInt(GENERAL_DOMAIN, "cover_prio", m_downloadPrioVal );
 				m_cfg.save();
 				_showSettings();
 			}
@@ -1371,7 +1371,7 @@ void CMenu::_download(string gameId)
 			{
 				_hideSettings();
 				m_downloadPrioVal ^= C_TYPE_FR;
-				m_cfg.setUInt( "GENERAL", "cover_prio", m_downloadPrioVal );
+				m_cfg.setUInt(GENERAL_DOMAIN, "cover_prio", m_downloadPrioVal );
 				m_cfg.save();
 				_showSettings();
 			}
@@ -1379,7 +1379,7 @@ void CMenu::_download(string gameId)
 			{
 				_hideSettings();
 				m_downloadPrioVal ^= C_TYPE_DE;
-				m_cfg.setUInt( "GENERAL", "cover_prio", m_downloadPrioVal );
+				m_cfg.setUInt(GENERAL_DOMAIN, "cover_prio", m_downloadPrioVal );
 				m_cfg.save();
 				_showSettings();
 			}
@@ -1387,7 +1387,7 @@ void CMenu::_download(string gameId)
 			{
 				_hideSettings();
 				m_downloadPrioVal ^= C_TYPE_ES;
-				m_cfg.setUInt( "GENERAL", "cover_prio", m_downloadPrioVal );
+				m_cfg.setUInt(GENERAL_DOMAIN, "cover_prio", m_downloadPrioVal );
 				m_cfg.save();
 				_showSettings();
 			}
@@ -1395,7 +1395,7 @@ void CMenu::_download(string gameId)
 			{
 				_hideSettings();
 				m_downloadPrioVal ^= C_TYPE_IT;
-				m_cfg.setUInt( "GENERAL", "cover_prio", m_downloadPrioVal );
+				m_cfg.setUInt(GENERAL_DOMAIN, "cover_prio", m_downloadPrioVal );
 				m_cfg.save();
 				_showSettings();
 			}
@@ -1403,7 +1403,7 @@ void CMenu::_download(string gameId)
 			{
 				_hideSettings();
 				m_downloadPrioVal ^= C_TYPE_NL;
-				m_cfg.setUInt( "GENERAL", "cover_prio", m_downloadPrioVal );
+				m_cfg.setUInt(GENERAL_DOMAIN, "cover_prio", m_downloadPrioVal );
 				m_cfg.save();
 				_showSettings();
 			}
@@ -1411,7 +1411,7 @@ void CMenu::_download(string gameId)
 			{
 				_hideSettings();
 				m_downloadPrioVal ^= C_TYPE_PT;
-				m_cfg.setUInt( "GENERAL", "cover_prio", m_downloadPrioVal );
+				m_cfg.setUInt(GENERAL_DOMAIN, "cover_prio", m_downloadPrioVal );
 				m_cfg.save();
 				_showSettings();
 			}
@@ -1419,7 +1419,7 @@ void CMenu::_download(string gameId)
 			{
 				_hideSettings();
 				m_downloadPrioVal ^= C_TYPE_RU;
-				m_cfg.setUInt( "GENERAL", "cover_prio", m_downloadPrioVal );
+				m_cfg.setUInt(GENERAL_DOMAIN, "cover_prio", m_downloadPrioVal );
 				m_cfg.save();
 				_showSettings();
 			}
@@ -1427,7 +1427,7 @@ void CMenu::_download(string gameId)
 			{
 				_hideSettings();
 				m_downloadPrioVal ^= C_TYPE_KO;
-				m_cfg.setUInt( "GENERAL", "cover_prio", m_downloadPrioVal );
+				m_cfg.setUInt(GENERAL_DOMAIN, "cover_prio", m_downloadPrioVal );
 				m_cfg.save();
 				_showSettings();
 			}
@@ -1435,7 +1435,7 @@ void CMenu::_download(string gameId)
 			{
 				_hideSettings();
 				m_downloadPrioVal ^= C_TYPE_ZHCN;
-				m_cfg.setUInt( "GENERAL", "cover_prio", m_downloadPrioVal );
+				m_cfg.setUInt(GENERAL_DOMAIN, "cover_prio", m_downloadPrioVal );
 				m_cfg.save();
 				_showSettings();
 			}
@@ -1443,7 +1443,7 @@ void CMenu::_download(string gameId)
 			{
 				_hideSettings();
 				m_downloadPrioVal ^= C_TYPE_AU;
-				m_cfg.setUInt( "GENERAL", "cover_prio", m_downloadPrioVal );
+				m_cfg.setUInt(GENERAL_DOMAIN, "cover_prio", m_downloadPrioVal );
 				m_cfg.save();				
 				_showSettings();
 			}
@@ -1617,7 +1617,7 @@ void CMenu::_initDownloadMenu()
 	_setHideAnim(m_downloadBtnAUs, "DOWNLOAD/AUS", 0, 0, -2.f, 0.f);
 	_setHideAnim(m_downloadBtnBack, "DOWNLOAD/BACK_BTN", 0, 0, 1.f, -1.f);
 
-	m_downloadPrioVal = m_cfg.getUInt("GENERAL", "cover_prio", 0);
+	m_downloadPrioVal = m_cfg.getUInt(GENERAL_DOMAIN, "cover_prio", 0);
 
 	_hideDownload(true);
 	_textDownload();
@@ -1680,7 +1680,7 @@ s8 CMenu::_versionTxtDownloader() // code to download new version txt file
 
 		m_thrdStep = 0.2f;
 		m_thrdStepLen = 0.9f - 0.2f;
-		gprintf("TXT update URL: %s\n\n", m_cfg.getString("GENERAL", "updatetxturl", UPDATE_URL_VERSION).c_str());
+		gprintf("TXT update URL: %s\n\n", m_cfg.getString(GENERAL_DOMAIN, "updatetxturl", UPDATE_URL_VERSION).c_str());
 		download = downloadfile(buffer, bufferSize, ("http://nintendont.gxarena.com/banners/versions.txt"),CMenu::_downloadProgress, this);
 		if (download.data == 0 || download.size < 19)
 		{
@@ -1702,7 +1702,7 @@ s8 CMenu::_versionTxtDownloader() // code to download new version txt file
 				int svnrev = atoi(SVN_REV);
 				gprintf("Installed Version: %d\n", svnrev);
 				m_version.load(m_ver.c_str());
-				int rev = m_version.getInt("GENERAL", "version", 0);
+				int rev = m_version.getInt(GENERAL_DOMAIN, "version", 0);
 				gprintf("Latest available Version: %d\n", rev);
 				if (svnrev < rev)
 				{
@@ -2004,8 +2004,8 @@ int CMenu::_gametdbDownloaderAsync()
 				// Update cache
 				//UpdateCache();
 				m_cfg.setBool(WII_DOMAIN, "update_cache", true);
-				m_cfg.setBool(GC_DOMAIN, "update_cache", true);
-				m_cfg.setBool(CHANNEL_DOMAIN, "update_cache", true);
+				m_cfg.setBool(GAMECUBE_DOMAIN, "update_cache", true);
+				m_cfg.setBool(CHANNELS_DOMAIN, "update_cache", true);
 				LWP_MutexLock(m_mutex);
 				_setThrdMsg(_t("dlmsg26", L"Updating cache..."), 0.f);
 				LWP_MutexUnlock(m_mutex);
@@ -2084,13 +2084,13 @@ void CMenu::_downloadBnr(const char *gameID)
 {
 	if(gameID == NULL || strlen(gameID) > 6)
 		return;
-	string base_url = m_cfg.getString("GENERAL", "custom_banner_url", CUSTOM_BANNER_URL);
+	string base_url = m_cfg.getString(GENERAL_DOMAIN, "custom_banner_url", CUSTOM_BANNER_URL);
 	if(base_url.size() < 3 || base_url.find(GAME_BNR_ID) == string::npos)
 		return;
 	base_url.replace(base_url.find(GAME_BNR_ID), strlen(GAME_BNR_ID), gameID);
 	banner_url = base_url.c_str();
 
-	string base_url_id3 = m_cfg.getString("GENERAL", "custom_banner_url", CUSTOM_BANNER_URL);
+	string base_url_id3 = m_cfg.getString(GENERAL_DOMAIN, "custom_banner_url", CUSTOM_BANNER_URL);
 	base_url_id3.replace(base_url_id3.find(GAME_BNR_ID), strlen(GAME_BNR_ID), gameID, 3);
 	banner_url_id3 = base_url_id3.c_str();
 

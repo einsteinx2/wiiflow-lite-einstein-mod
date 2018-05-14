@@ -91,7 +91,7 @@ void CMenu::_sourceFlow()
 	else //(source == "wii")
 		m_current_view = COVERFLOW_WII;
 	m_sourceflow = false;
-	m_cfg.setUInt("GENERAL", "sources", m_current_view);
+	m_cfg.setUInt(GENERAL_DOMAIN, "sources", m_current_view);
 	m_source_cnt = 1;
 	_setSrcOptions();
 }
@@ -266,7 +266,7 @@ bool CMenu::_Source()
 			{
 				m_current_view = COVERFLOW_WII;
 				m_source_cnt = 1;
-				m_cfg.setUInt("GENERAL", "sources", m_current_view);
+				m_cfg.setUInt(GENERAL_DOMAIN, "sources", m_current_view);
 				break;
 			}
 			if(selectedBtns == 1)
@@ -276,7 +276,7 @@ bool CMenu::_Source()
 				_setSrcOptions();
 			}
 			
-			m_cfg.setUInt("GENERAL", "sources", m_current_view);
+			m_cfg.setUInt(GENERAL_DOMAIN, "sources", m_current_view);
 			m_source_cnt = 0;
 			for(i = 1; i < 16; i <<= 1)//not including coverflow_homebrew
 				if(m_current_view & i)
@@ -442,7 +442,7 @@ bool CMenu::_Source()
 		}
 		if(exitSource)
 		{
-			m_cfg.setUInt("GENERAL", "sources", m_current_view);
+			m_cfg.setUInt(GENERAL_DOMAIN, "sources", m_current_view);
 			m_source_cnt = 1;
 			newSource = true;
 			break;
@@ -516,11 +516,11 @@ void CMenu::_setSrcOptions(void)
 	u8 category = m_source.getInt(btn_selected, "category", 0);
 	if(category > 0)
 	{
-		m_cat.remove("GENERAL", "selected_categories");
-		m_cat.remove("GENERAL", "required_categories");
+		m_cat.remove(GENERAL_DOMAIN, "selected_categories");
+		m_cat.remove(GENERAL_DOMAIN, "required_categories");
 		char cCh = static_cast<char>(category + 32);
 		string newSelCats(1, cCh);
-		m_cat.setString("GENERAL", "selected_categories", newSelCats);
+		m_cat.setString(GENERAL_DOMAIN, "selected_categories", newSelCats);
 		m_clearCats = false;
 	}
 	if(m_multisource) return;
@@ -563,7 +563,7 @@ void CMenu::_setSrcOptions(void)
 void CMenu::_initSourceMenu()
 {
 	m_use_source = false;
-	themeName = m_cfg.getString("GENERAL", "theme", "default").c_str();
+	themeName = m_cfg.getString(GENERAL_DOMAIN, "theme", "default").c_str();
 	if(!m_source.load(fmt("%s/%s/%s", m_sourceDir.c_str(), themeName, SOURCE_FILENAME)))
 	{
 		if(!m_source.load(fmt("%s/%s", m_sourceDir.c_str(), SOURCE_FILENAME)))

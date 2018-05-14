@@ -61,13 +61,13 @@ void CMenu::_showConfig3(void)
 		if(m_config3LblUser[i] != -1)
 			m_btnMgr.show(m_config3LblUser[i]);
 
-	int i = min(max(0, m_cfg.getInt("GENERAL", "video_mode", 0)), (int)ARRAY_SIZE(CMenu::_GlobalVideoModes) - 1);
+	int i = min(max(0, m_cfg.getInt(GENERAL_DOMAIN, "video_mode", 0)), (int)ARRAY_SIZE(CMenu::_GlobalVideoModes) - 1);
 	m_btnMgr.setText(m_config3LblVideo, _t(CMenu::_GlobalVideoModes[i].id, CMenu::_GlobalVideoModes[i].text));
 
-	i = min(max(0, m_cfg.getInt("GENERAL", "game_language", 0)), (int)ARRAY_SIZE(CMenu::_languages) - 1);
+	i = min(max(0, m_cfg.getInt(GENERAL_DOMAIN, "game_language", 0)), (int)ARRAY_SIZE(CMenu::_languages) - 1);
 	m_btnMgr.setText(m_config3LblLanguage, _t(CMenu::_languages[i].id, CMenu::_languages[i].text));
 	
-	i = m_cfg.getInt(CHANNEL_DOMAIN, "channels_type") - 1;
+	i = m_cfg.getInt(CHANNELS_DOMAIN, "channels_type") - 1;
 	m_btnMgr.setText(m_config3LblChannelsTypeVal, _t(CMenu::_ChannelsType[i].id, CMenu::_ChannelsType[i].text));
 }
 
@@ -86,13 +86,13 @@ int CMenu::_config3(void)
 			if (m_btnMgr.selected(m_config3BtnLanguageP) || m_btnMgr.selected(m_config3BtnLanguageM))
 			{
 				s8 direction = m_btnMgr.selected(m_config3BtnLanguageP) ? 1 : -1;
-				m_cfg.setInt("GENERAL", "game_language", (int)loopNum(m_cfg.getUInt("GENERAL", "game_language", 0) + direction, ARRAY_SIZE(CMenu::_languages)));
+				m_cfg.setInt(GENERAL_DOMAIN, "game_language", (int)loopNum(m_cfg.getUInt(GENERAL_DOMAIN, "game_language", 0) + direction, ARRAY_SIZE(CMenu::_languages)));
 				_showConfig3();
 			}
 			else if (m_btnMgr.selected(m_config3BtnVideoP) || m_btnMgr.selected(m_config3BtnVideoM))
 			{
 				s8 direction = m_btnMgr.selected(m_config3BtnVideoP) ? 1 : -1;
-				m_cfg.setInt("GENERAL", "video_mode", (int)loopNum(m_cfg.getUInt("GENERAL", "video_mode", 0) + direction, ARRAY_SIZE(CMenu::_GlobalVideoModes)));
+				m_cfg.setInt(GENERAL_DOMAIN, "video_mode", (int)loopNum(m_cfg.getUInt(GENERAL_DOMAIN, "video_mode", 0) + direction, ARRAY_SIZE(CMenu::_GlobalVideoModes)));
 				_showConfig3();
 			}
 			else if (m_btnMgr.selected(m_config3BtnGCDefaults))
@@ -104,7 +104,7 @@ int CMenu::_config3(void)
 			else if (m_btnMgr.selected(m_config3BtnChannelsTypeP) || m_btnMgr.selected(m_config3BtnChannelsTypeM))
 			{
 				s8 direction = m_btnMgr.selected(m_config3BtnChannelsTypeP) ? 1 : -1;
-				m_cfg.setInt(CHANNEL_DOMAIN, "channels_type", 1 + (int)loopNum(m_cfg.getUInt(CHANNEL_DOMAIN, "channels_type", 1) - 1 + direction, ARRAY_SIZE(CMenu::_ChannelsType)));
+				m_cfg.setInt(CHANNELS_DOMAIN, "channels_type", 1 + (int)loopNum(m_cfg.getUInt(CHANNELS_DOMAIN, "channels_type", 1) - 1 + direction, ARRAY_SIZE(CMenu::_ChannelsType)));
 				_showConfig3();
 				if(m_current_view & COVERFLOW_CHANNEL || m_current_view & COVERFLOW_PLUGIN)
 					m_refreshGameList = true;

@@ -153,11 +153,11 @@ int CMenu::_GCgameInstaller()
 {
 	GCDump m_gcdump;
 
-	bool skip = m_cfg.getBool(GC_DOMAIN, "skip_on_error", false);
-	bool comp = m_cfg.getBool(GC_DOMAIN, "compressed_dump", false);
-	bool wexf = m_cfg.getBool(GC_DOMAIN, "write_ex_files", false);
-	bool alig = m_cfg.getBool(GC_DOMAIN, "force_32k_align_files", false);
-	u32 nretry = m_cfg.getUInt(GC_DOMAIN, "num_retries", 5);
+	bool skip = m_cfg.getBool(GAMECUBE_DOMAIN, "skip_on_error", false);
+	bool comp = m_cfg.getBool(GAMECUBE_DOMAIN, "compressed_dump", false);
+	bool wexf = m_cfg.getBool(GAMECUBE_DOMAIN, "write_ex_files", false);
+	bool alig = m_cfg.getBool(GAMECUBE_DOMAIN, "force_32k_align_files", false);
+	u32 nretry = m_cfg.getUInt(GAMECUBE_DOMAIN, "num_retries", 5);
 	u32 rsize = 1048576; //1MB
 
 	if(skip)
@@ -360,7 +360,7 @@ bool CMenu::_wbfsOp(CMenu::WBFS_OP op)
 							game_type = TYPE_GC_GAME;
 							CoverFlow.clear();
 							strncpy(cfPos, GameID, 6);
-							currentPartition = m_cfg.getInt(GC_DOMAIN, "partition", 0);
+							currentPartition = m_cfg.getInt(GAMECUBE_DOMAIN, "partition", 0);
 							done = true;
 							upd_gc = true;
 							m_thrdWorking = true;
@@ -440,7 +440,7 @@ bool CMenu::_wbfsOp(CMenu::WBFS_OP op)
 							out = true;
 							break;
 						}
-						if(m_cfg.getBool("GENERAL", "delete_cover_and_game", false))
+						if(m_cfg.getBool(GENERAL_DOMAIN, "delete_cover_and_game", false))
 							RemoveCover(CF_Hdr->id);
 						m_btnMgr.show(m_wbfsPBar);
 						m_btnMgr.setProgress(m_wbfsPBar, 0.f, true);
@@ -491,16 +491,16 @@ bool CMenu::_wbfsOp(CMenu::WBFS_OP op)
 			if(game_type == TYPE_WII_GAME)
 				m_cfg.setString(WII_DOMAIN, "current_item", cfPos);
 			else
-				m_cfg.setString(GC_DOMAIN, "current_item", cfPos);
+				m_cfg.setString(GAMECUBE_DOMAIN, "current_item", cfPos);
 		}
 		if(upd_gc)
-			m_cfg.setBool(GC_DOMAIN, "update_cache", true);
+			m_cfg.setBool(GAMECUBE_DOMAIN, "update_cache", true);
 		if(upd_wii)
 			m_cfg.setBool(WII_DOMAIN, "update_cache", true);
 		if(upd_plgin)
 			m_cfg.setBool(PLUGIN_DOMAIN, "update_cache", true);
 		if(upd_chan)
-			m_cfg.setBool(CHANNEL_DOMAIN, "update_cache", true);
+			m_cfg.setBool(CHANNELS_DOMAIN, "update_cache", true);
 		m_refreshGameList = true;
 	}
 	return done;

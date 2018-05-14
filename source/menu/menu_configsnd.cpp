@@ -52,10 +52,10 @@ void CMenu::_showConfigSnd(void)
 		if(m_configSndLblUser[i] != -1)
 			m_btnMgr.show(m_configSndLblUser[i]);
 
-	m_btnMgr.setText(m_configSndLblGuiVolVal, wfmt(L"%i", m_cfg.getInt("GENERAL", "sound_volume_gui", 255)));
-	m_btnMgr.setText(m_configSndLblCFVolVal, wfmt(L"%i", m_cfg.getInt("GENERAL", "sound_volume_coverflow", 255)));
-	m_btnMgr.setText(m_configSndLblMusicVolVal, wfmt(L"%i", m_cfg.getInt("GENERAL", "sound_volume_music", 255)));
-	m_btnMgr.setText(m_configSndLblBnrVolVal, wfmt(L"%i", m_cfg.getInt("GENERAL", "sound_volume_bnr", 255)));
+	m_btnMgr.setText(m_configSndLblGuiVolVal, wfmt(L"%i", m_cfg.getInt(GENERAL_DOMAIN, "sound_volume_gui", 255)));
+	m_btnMgr.setText(m_configSndLblCFVolVal, wfmt(L"%i", m_cfg.getInt(GENERAL_DOMAIN, "sound_volume_coverflow", 255)));
+	m_btnMgr.setText(m_configSndLblMusicVolVal, wfmt(L"%i", m_cfg.getInt(GENERAL_DOMAIN, "sound_volume_music", 255)));
+	m_btnMgr.setText(m_configSndLblBnrVolVal, wfmt(L"%i", m_cfg.getInt(GENERAL_DOMAIN, "sound_volume_bnr", 255)));
 }
 
 int CMenu::_configSnd(void)
@@ -74,53 +74,53 @@ int CMenu::_configSnd(void)
 		{
 			if (m_btnMgr.selected(m_configSndBtnBnrVolP))
 			{
-				m_cfg.setInt("GENERAL", "sound_volume_bnr", min(m_cfg.getInt("GENERAL", "sound_volume_bnr", 255) + step, 255));
+				m_cfg.setInt(GENERAL_DOMAIN, "sound_volume_bnr", min(m_cfg.getInt(GENERAL_DOMAIN, "sound_volume_bnr", 255) + step, 255));
 				_showConfigSnd();
-				m_bnrSndVol = m_cfg.getInt("GENERAL", "sound_volume_bnr", 255);
+				m_bnrSndVol = m_cfg.getInt(GENERAL_DOMAIN, "sound_volume_bnr", 255);
 			}
 			else if (m_btnMgr.selected(m_configSndBtnBnrVolM))
 			{
-				m_cfg.setInt("GENERAL", "sound_volume_bnr", max(m_cfg.getInt("GENERAL", "sound_volume_bnr", 255) - step, 0));
+				m_cfg.setInt(GENERAL_DOMAIN, "sound_volume_bnr", max(m_cfg.getInt(GENERAL_DOMAIN, "sound_volume_bnr", 255) - step, 0));
 				_showConfigSnd();
-				m_bnrSndVol = m_cfg.getInt("GENERAL", "sound_volume_bnr", 255);
+				m_bnrSndVol = m_cfg.getInt(GENERAL_DOMAIN, "sound_volume_bnr", 255);
 			}
 			else if (m_btnMgr.selected(m_configSndBtnGuiVolP))
 			{
-				m_cfg.setInt("GENERAL", "sound_volume_gui", min(m_cfg.getInt("GENERAL", "sound_volume_gui", 255) + step, 255));
+				m_cfg.setInt(GENERAL_DOMAIN, "sound_volume_gui", min(m_cfg.getInt(GENERAL_DOMAIN, "sound_volume_gui", 255) + step, 255));
 				_showConfigSnd();
-				m_btnMgr.setSoundVolume(m_cfg.getInt("GENERAL", "sound_volume_gui", 255));
+				m_btnMgr.setSoundVolume(m_cfg.getInt(GENERAL_DOMAIN, "sound_volume_gui", 255));
 			}
 			else if (m_btnMgr.selected(m_configSndBtnGuiVolM))
 			{
-				m_cfg.setInt("GENERAL", "sound_volume_gui", max(m_cfg.getInt("GENERAL", "sound_volume_gui", 255) - step, 0));
+				m_cfg.setInt(GENERAL_DOMAIN, "sound_volume_gui", max(m_cfg.getInt(GENERAL_DOMAIN, "sound_volume_gui", 255) - step, 0));
 				_showConfigSnd();
-				m_btnMgr.setSoundVolume(m_cfg.getInt("GENERAL", "sound_volume_gui", 255));
+				m_btnMgr.setSoundVolume(m_cfg.getInt(GENERAL_DOMAIN, "sound_volume_gui", 255));
 			}
 			else if (m_btnMgr.selected(m_configSndBtnMusicVolP))
 			{
-				int musicVol = min(m_cfg.getInt("GENERAL", "sound_volume_music", 255) + step, 255);
-				m_cfg.setInt("GENERAL", "sound_volume_music", musicVol);
+				int musicVol = min(m_cfg.getInt(GENERAL_DOMAIN, "sound_volume_music", 255) + step, 255);
+				m_cfg.setInt(GENERAL_DOMAIN, "sound_volume_music", musicVol);
 				_showConfigSnd();
 				MusicPlayer.SetMaxVolume(musicVol);
 			}
 			else if (m_btnMgr.selected(m_configSndBtnMusicVolM))
 			{
-				int musicVol = max(m_cfg.getInt("GENERAL", "sound_volume_music", 255) - step, 0);
-				m_cfg.setInt("GENERAL", "sound_volume_music", musicVol);
+				int musicVol = max(m_cfg.getInt(GENERAL_DOMAIN, "sound_volume_music", 255) - step, 0);
+				m_cfg.setInt(GENERAL_DOMAIN, "sound_volume_music", musicVol);
 				_showConfigSnd();
 				MusicPlayer.SetMaxVolume(musicVol);
 			}
 			else if (m_btnMgr.selected(m_configSndBtnCFVolP))
 			{
-				m_cfg.setInt("GENERAL", "sound_volume_coverflow", min(m_cfg.getInt("GENERAL", "sound_volume_coverflow", 255) + step, 255));
+				m_cfg.setInt(GENERAL_DOMAIN, "sound_volume_coverflow", min(m_cfg.getInt(GENERAL_DOMAIN, "sound_volume_coverflow", 255) + step, 255));
 				_showConfigSnd();
-				CoverFlow.setSoundVolume(m_cfg.getInt("GENERAL", "sound_volume_coverflow", 255));
+				CoverFlow.setSoundVolume(m_cfg.getInt(GENERAL_DOMAIN, "sound_volume_coverflow", 255));
 			}
 			else if (m_btnMgr.selected(m_configSndBtnCFVolM))
 			{
-				m_cfg.setInt("GENERAL", "sound_volume_coverflow", max(m_cfg.getInt("GENERAL", "sound_volume_coverflow", 255) - step, 0));
+				m_cfg.setInt(GENERAL_DOMAIN, "sound_volume_coverflow", max(m_cfg.getInt(GENERAL_DOMAIN, "sound_volume_coverflow", 255) - step, 0));
 				_showConfigSnd();
-				CoverFlow.setSoundVolume(m_cfg.getInt("GENERAL", "sound_volume_coverflow", 255));
+				CoverFlow.setSoundVolume(m_cfg.getInt(GENERAL_DOMAIN, "sound_volume_coverflow", 255));
 			}
 		}
 	}

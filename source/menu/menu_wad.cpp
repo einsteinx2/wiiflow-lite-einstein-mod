@@ -438,7 +438,7 @@ void CMenu::_Wad(const char *wad_path)
 	}
 
 	vector<string> emuNands;
-	string emuNand = m_cfg.getString(CHANNEL_DOMAIN, "current_emunand", "default");
+	string emuNand = m_cfg.getString(CHANNELS_DOMAIN, "current_emunand", "default");
 	int curEmuNand = 0;
 	string emuPath;
 	int emuPart = 0;
@@ -462,7 +462,7 @@ void CMenu::_Wad(const char *wad_path)
 			}
 		}
 		m_btnMgr.setText(m_wadLblDialog, wfmt(_fmt("wad7", L"Ready to install %s\nChoose emuNAND and then click Go."), (strrchr(wad_path, '/')+1)));
-		m_btnMgr.setText(m_wadLblNandSelectVal, m_cfg.getString(CHANNEL_DOMAIN, "current_emunand"));
+		m_btnMgr.setText(m_wadLblNandSelectVal, m_cfg.getString(CHANNELS_DOMAIN, "current_emunand"));
 	}
 	_showWad();
 
@@ -506,19 +506,19 @@ void CMenu::_Wad(const char *wad_path)
 			{
 				s8 direction = m_btnMgr.selected(m_wadBtnNandSelectP) ? 1 : -1;
 				curEmuNand = loopNum(curEmuNand + direction, emuNands.size());
-				m_cfg.setString(CHANNEL_DOMAIN, "current_emunand", emuNands[curEmuNand]);
-				m_btnMgr.setText(m_wadLblNandSelectVal, m_cfg.getString(CHANNEL_DOMAIN, "current_emunand"));
+				m_cfg.setString(CHANNELS_DOMAIN, "current_emunand", emuNands[curEmuNand]);
+				m_btnMgr.setText(m_wadLblNandSelectVal, m_cfg.getString(CHANNELS_DOMAIN, "current_emunand"));
 			}
 		}
 	}
 	if(!mios)
 	{
-		if(m_cfg.getString(CHANNEL_DOMAIN, "current_emunand") == emuNand)
+		if(m_cfg.getString(CHANNELS_DOMAIN, "current_emunand") == emuNand)
 		{
 			m_refreshGameList = true;
-			m_cfg.setBool(CHANNEL_DOMAIN, "update_cache", true);
+			m_cfg.setBool(CHANNELS_DOMAIN, "update_cache", true);
 		}
-		m_cfg.setString(CHANNEL_DOMAIN, "current_emunand", emuNand);//restore it
+		m_cfg.setString(CHANNELS_DOMAIN, "current_emunand", emuNand);//restore it
 	}
 	_hideWad();
 	/* onscreen message might be onscreen still */

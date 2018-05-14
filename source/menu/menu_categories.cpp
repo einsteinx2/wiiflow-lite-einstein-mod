@@ -99,7 +99,7 @@ void CMenu::_updateCheckboxes(void)
 			default:
 				m_btnMgr.show(m_categoryBtnCatReq[i]);
 		}
-		m_btnMgr.setText(m_categoryLblCat[i], m_cat.getWString("GENERAL", fmt("cat%d",j), wfmt(L"Category %i",j).c_str()));	
+		m_btnMgr.setText(m_categoryLblCat[i], m_cat.getWString(GENERAL_DOMAIN, fmt("cat%d",j), wfmt(L"Category %i",j).c_str()));	
 		m_btnMgr.show(m_categoryLblCat[i]);
 	}
 
@@ -111,19 +111,19 @@ void CMenu::_getGameCategories(void)
 	switch(hdr->type)
 	{
 		case TYPE_CHANNEL:
-			catDomain = "NAND";
+			catDomain = NAND_DOMAIN;
 			break;
 		case TYPE_EMUCHANNEL:
-			catDomain = "CHANNELS";
+			catDomain = CHANNELS_DOMAIN;
 			break;
 		case TYPE_HOMEBREW:
-			catDomain = "HOMEBREW";
+			catDomain = HOMEBREW_DOMAIN;
 			break;
 		case TYPE_GC_GAME:
-			catDomain = "GAMECUBE";
+			catDomain = GAMECUBE_DOMAIN;
 			break;
 		case TYPE_WII_GAME:
-			catDomain = "WII";
+			catDomain = WII_DOMAIN;
 			break;
 		default:
 			catDomain = m_plugin.PluginMagicWord;
@@ -181,7 +181,7 @@ void CMenu::_CategorySettings(bool fromGameSet)
 	if(m_source.loaded() && m_catStartPage > 0)
 		curPage = m_catStartPage;
 	
-	m_max_categories = m_cat.getInt("GENERAL", "numcategories", 6);
+	m_max_categories = m_cat.getInt(GENERAL_DOMAIN, "numcategories", 6);
 	if(curPage < 1 || curPage > (((m_max_categories - 2)/ 10) + 1))
 		curPage = 1;
 	m_categories.resize(m_max_categories, '0');
@@ -193,9 +193,9 @@ void CMenu::_CategorySettings(bool fromGameSet)
 	}
 	else
 	{
-		const char *requiredCats = m_cat.getString("GENERAL", "required_categories").c_str();
-		const char *selectedCats = m_cat.getString("GENERAL", "selected_categories").c_str();
-		const char *hiddenCats = m_cat.getString("GENERAL", "hidden_categories").c_str();
+		const char *requiredCats = m_cat.getString(GENERAL_DOMAIN, "required_categories").c_str();
+		const char *selectedCats = m_cat.getString(GENERAL_DOMAIN, "selected_categories").c_str();
+		const char *hiddenCats = m_cat.getString(GENERAL_DOMAIN, "hidden_categories").c_str();
 		u8 numReqCats = strlen(requiredCats);
 		u8 numSelCats = strlen(selectedCats);
 		u8 numHidCats = strlen(hiddenCats);
@@ -260,9 +260,9 @@ void CMenu::_CategorySettings(bool fromGameSet)
 						newReqCats = newReqCats + cCh;
 					}
 				}
-				m_cat.setString("GENERAL", "selected_categories", newSelCats);
-				m_cat.setString("GENERAL", "hidden_categories", newHidCats);
-				m_cat.setString("GENERAL", "required_categories", newReqCats);
+				m_cat.setString(GENERAL_DOMAIN, "selected_categories", newSelCats);
+				m_cat.setString(GENERAL_DOMAIN, "hidden_categories", newHidCats);
+				m_cat.setString(GENERAL_DOMAIN, "required_categories", newReqCats);
 			}
 			else
 			{

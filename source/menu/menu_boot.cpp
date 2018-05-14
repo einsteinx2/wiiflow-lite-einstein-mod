@@ -71,7 +71,7 @@ void CMenu::_showBoot()
 	m_btnMgr.show(m_bootLblUSBPort);
 	m_btnMgr.show(m_bootBtnUSBPort);
 
-	m_btnMgr.setText(m_bootBtnAsyncNet, m_cfg.getBool("GENERAL", "async_network", false) ? _t("on", L"On") : _t("off", L"Off"));
+	m_btnMgr.setText(m_bootBtnAsyncNet, m_cfg.getBool(GENERAL_DOMAIN, "async_network", false) ? _t("on", L"On") : _t("off", L"Off"));
 	m_btnMgr.show(m_bootLblAsyncNet);
 	m_btnMgr.show(m_bootBtnAsyncNet);
 }
@@ -131,8 +131,8 @@ bool CMenu::_Boot(void)
 			}
 			else if (m_btnMgr.selected(m_bootBtnAsyncNet))
 			{
-				m_cfg.setBool("GENERAL", "async_network", !m_cfg.getBool("GENERAL", "async_network", false));
-				m_btnMgr.setText(m_bootBtnAsyncNet, m_cfg.getBool("GENERAL", "async_network", false) ? _t("on", L"On") : _t("off", L"Off"));
+				m_cfg.setBool(GENERAL_DOMAIN, "async_network", !m_cfg.getBool(GENERAL_DOMAIN, "async_network", false));
+				m_btnMgr.setText(m_bootBtnAsyncNet, m_cfg.getBool(GENERAL_DOMAIN, "async_network", false) ? _t("on", L"On") : _t("off", L"Off"));
 			}
 		}
 	}
