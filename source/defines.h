@@ -1,4 +1,4 @@
-#define APP_NAME				"WiiFlow Lite Einstein Mod"
+#define APP_NAME				"WiiFlow Lite"
 #define APP_VERSION				"4.4.0"
 
 #define APP_DATA_DIR			"wiiflow"
@@ -24,7 +24,7 @@
 #define HOMEBREW_DOMAIN			"HOMEBREW"
 #define SOURCEFLOW_DOMAIN		"SOURCEFLOW"
 
-#define DEVELOPERS				"Fledge68, einsteinx2"
+#define DEVELOPERS				"Fledge68"
 #define PAST_DEVELOPERS			"FIX94, OverjoY, Hibernatus, Narolez, Hulk, Miigotu, r-win"
 #define LOADER_AUTHOR			"Kwiirk, Waninkoko, Hermes"
 #define GUI_AUTHOR				"Hibernatus"

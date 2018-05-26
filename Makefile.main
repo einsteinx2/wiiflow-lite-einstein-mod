@@ -139,6 +139,7 @@ export OUTPUT	:=	$(CURDIR)/out/$(TARGET)
 #---------------------------------------------------------------------------------
 $(BUILD):
 	@[ -d $@ ] || mkdir -p $@
+	@bash ./scripts/svnrev.sh
 	@bash ./scripts/buildtype.sh $(ios)
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile.main
 

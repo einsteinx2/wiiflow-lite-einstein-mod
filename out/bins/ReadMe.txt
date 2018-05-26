@@ -1,1 +1,0 @@
-Folder needed for app_booter.bin, ext_booter.bin, and ext_loader.bin
