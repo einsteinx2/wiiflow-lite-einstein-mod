@@ -6,4 +6,4 @@
 // just manually update this header when I want a new build number. I've decided
 // to leave the variable name alone to prevent other source code changes.
 
-#define SVN_REV "3"
+#define SVN_REV "4"
